@@ -1,0 +1,21 @@
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(516,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(517,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (C:\Users\raymo\source\repos\rgame\Build\Output\Intermediate\) contains files shared from another project (wavefront_tester.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  game_object.cpp
+  game_scene.cpp
+  io.cpp
+  render_camera.cpp
+  render_mesh.cpp
+C:\Users\raymo\source\repos\rgame\rgame\render_mesh.cpp(93,57): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  render_shader.cpp
+C:\Users\raymo\source\repos\rgame\rgame\render_shader.cpp(25,36): warning C4838: conversion from 'int' to 'uint32_t' requires a narrowing conversion
+C:\Users\raymo\source\repos\rgame\rgame\render_shader.cpp(107,18): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  render_window.cpp
+  transform.cpp
+  wavefront.cpp
+C:\Users\raymo\source\repos\rgame\rgame\wavefront.cpp(44,27): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\raymo\source\repos\rgame\rgame\wavefront.cpp(97,29): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\raymo\source\repos\rgame\rgame\wavefront.cpp(107,18): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\raymo\source\repos\rgame\rgame\wavefront.cpp(128,14): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  Generating Code...
+  rgame.vcxproj -> C:\Users\raymo\source\repos\rgame\Build\Output\Build\rgame.lib
