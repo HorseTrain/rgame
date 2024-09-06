@@ -24,6 +24,10 @@ struct transform
 	static glm::mat4		get_local_transform_matrix(transform* source);
 	static glm::mat4		get_local_camera_transform_matrix(transform* source);
 	static glm::mat4		get_world_transform_matrix_recursive(transform* source);
+
+	static glm::vec3		get_forward(glm::mat4 source);
+	static glm::vec3		get_right(glm::mat4 source);
+	static glm::vec3		get_up(glm::mat4 source);
 };
 
 #endif

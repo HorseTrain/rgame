@@ -24,6 +24,11 @@ void render_window::create(render_window* result, window_main_loop loop, uint32_
 	glewInit();
 }
 
+void render_window::destroy(render_window* window)
+{
+	glfwDestroyWindow(window->raw_window);
+}
+
 void render_window::make_context_current(render_window* window)
 {
 	glfwMakeContextCurrent(window->raw_window);
@@ -34,7 +39,7 @@ bool render_window::should_window_close(render_window* window)
 	return glfwWindowShouldClose(window->raw_window);
 }
 
-void render_window::run(render_window* window)
+void render_window::run(render_window* window, void* arguments)
 {
 	make_context_current(window);
 
@@ -54,7 +59,7 @@ void render_window::run(render_window* window)
 
 		if (window->loop != nullptr)
 		{
-			window->loop(window, 0);
+			window->loop(window, 0, arguments);
 		}
 
 		swap_buffers(window);

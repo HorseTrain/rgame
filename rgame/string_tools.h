@@ -44,4 +44,5 @@ static bool starts_with(std::string source, std::string check)
 
 	return source.substr(0,check.length()) == check;
 }
+
 #endif

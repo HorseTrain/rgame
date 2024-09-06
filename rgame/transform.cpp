@@ -27,3 +27,19 @@ glm::mat4 transform::get_local_camera_transform_matrix(transform* source)
 
 	return position_matrix * rotation_matrix * scale_matrix;
 }
+
+glm::vec3 transform::get_forward(glm::mat4 source)
+{
+	return glm::vec3(source[0][2], source[1][2], source[2][2]);
+}
+
+glm::vec3 transform::get_right(glm::mat4 source)
+{
+	return glm::vec3(source[0][0], source[1][0], source[2][0]);
+}
+
+glm::vec3 transform::get_up(glm::mat4 source)
+{
+	return glm::vec3(source[0][1], source[1][1], source[2][1]);
+}
+
