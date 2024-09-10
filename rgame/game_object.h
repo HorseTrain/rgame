@@ -4,7 +4,6 @@
 #define SIMPLE_RENDER_OBJECT_H
 
 #include "transform.h"
-#include "render_mesh.h"
 
 struct game_object;
 struct game_scene;

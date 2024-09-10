@@ -2,7 +2,7 @@
 
 #include "wavefront.h"
 
-#include "render_mesh.h"
+#include "basic_render_mesh.h"
 #include "string_tools.h"
 #include "render_window.h"
 
@@ -26,7 +26,7 @@ static void set_vertex_data_if_exists(T* result, std::string source_name, int* i
 	*result = *(T*)&vertex;
 }
 
-int wavefront_parse_mesh_object(render_mesh* result_mesh, std::vector<std::string>* lines, std::map<std::string, std::vector<glm::vec4>>* carry_over_vertex_data, int line_location)
+int wavefront_parse_mesh_object(basic_render_mesh* result_mesh, std::vector<std::string>* lines, std::map<std::string, std::vector<glm::vec4>>* carry_over_vertex_data, int line_location)
 {
 	std::vector<int>								source_face_data;
 
@@ -106,7 +106,7 @@ int wavefront_parse_mesh_object(render_mesh* result_mesh, std::vector<std::strin
 
 	int faces_count = source_face_data.size() / (primitive_point_count * vertex_attribute_count);
 
-	render_mesh::create(result_mesh, convert_face_count_to_gl_type(source_face_count));
+	basic_render_mesh::create(result_mesh, convert_face_count_to_gl_type(source_face_count));
 
 	for (int face = 0; face < faces_count; ++face)
 	{
@@ -114,7 +114,7 @@ int wavefront_parse_mesh_object(render_mesh* result_mesh, std::vector<std::strin
 		{
 			int* working_face_data = source_face_data.data() + (face * single_face_size) + (point_data * vertex_attribute_count);
 
-			render_vertex new_vertex;
+			basic_render_vertex new_vertex;
 
 			set_vertex_data_if_exists(&new_vertex.position, "v", working_face_data, 0, carry_over_vertex_data);
 			set_vertex_data_if_exists(&new_vertex.normal, "vn", working_face_data, 2, carry_over_vertex_data);

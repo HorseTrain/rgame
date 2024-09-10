@@ -24,8 +24,9 @@
     <ClCompile Include="input_manager.cpp" />
     <ClCompile Include="io.cpp" />
     <ClCompile Include="render_camera.cpp" />
-    <ClCompile Include="render_mesh.cpp" />
+    <ClCompile Include="basic_render_mesh.cpp" />
     <ClCompile Include="render_shader.cpp" />
+    <ClCompile Include="render_texture.cpp" />
     <ClCompile Include="render_window.cpp" />
     <ClCompile Include="transform.cpp" />
     <ClCompile Include="wavefront.cpp" />
@@ -44,10 +45,12 @@
     <ClInclude Include="io.h" />
     <ClInclude Include="memory_tools.h" />
     <ClInclude Include="render_camera.h" />
-    <ClInclude Include="render_mesh.h" />
+    <ClInclude Include="basic_render_mesh.h" />
     <ClInclude Include="render_shader.h" />
+    <ClInclude Include="render_texture.h" />
     <ClInclude Include="render_window.h" />
     <ClInclude Include="r_math.h" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="string_tools.h" />
     <ClInclude Include="transform.h" />
     <ClInclude Include="wavefront.h" />

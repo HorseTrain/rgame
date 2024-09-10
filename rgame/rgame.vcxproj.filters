@@ -27,7 +27,7 @@
     <ClCompile Include="render_camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="render_mesh.cpp">
+    <ClCompile Include="basic_render_mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="render_shader.cpp">
@@ -43,6 +43,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="input_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="render_texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,7 +65,7 @@
     <ClInclude Include="render_camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="render_mesh.h">
+    <ClInclude Include="basic_render_mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="render_shader.h">
@@ -105,6 +108,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="big_int.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="render_texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
