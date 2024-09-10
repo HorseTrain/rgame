@@ -13,7 +13,6 @@ int main()
 	render_window::create(&main_window, world::scene_world_loop, 600, 600, 60, "Minecraft");
 	game_scene::create(&raw_scene, &main_window);
 
-
 	world main_world;
 	world::create(&main_world, &raw_scene);
 

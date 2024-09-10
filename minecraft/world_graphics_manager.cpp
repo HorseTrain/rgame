@@ -24,10 +24,15 @@ vec3 transform_vec3(mat4 transformation, vec3 point)
 	return (transformation * vec4(point, 1)).xyz;
 }
 
+vec3 transform_direction(mat4 transformation, vec3 point)
+{
+	return transform_vec3(transpose(inverse(transformation)), point);
+}
+
 void main()
 {
 	position = transform_vec3(object_transform, i_position);
-	normal = transform_vec3(object_transform, i_normal);
+	normal = transform_direction(object_transform, i_normal);
 
 	uv = i_uv;
 	color = i_color;

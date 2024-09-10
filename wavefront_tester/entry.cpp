@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "rgame\render_window.h"
+#include "rgame/render_window.h"
 #include "obj_model_scene.h"
 
 #include "rgame/game_scene.h"

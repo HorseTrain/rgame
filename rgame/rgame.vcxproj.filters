@@ -104,5 +104,8 @@
     <ClInclude Include="input_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="big_int.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

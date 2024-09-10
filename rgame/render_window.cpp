@@ -50,7 +50,7 @@ void render_window::run(render_window* window, void* arguments)
 		auto start_time = std::chrono::high_resolution_clock::now();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(0, 0, 0, 1);
+		glClearColor(.5, .5, .5, 1);
 
 		poll_events(window);
 

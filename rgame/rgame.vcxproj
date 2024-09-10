@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="game_object.cpp" />
     <ClCompile Include="game_scene.cpp" />
+    <ClCompile Include="input_manager.cpp" />
     <ClCompile Include="io.cpp" />
     <ClCompile Include="render_camera.cpp" />
     <ClCompile Include="render_mesh.cpp" />
@@ -30,6 +31,7 @@
     <ClCompile Include="wavefront.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="big_int.h" />
     <ClInclude Include="game_object.h" />
     <ClInclude Include="game_scene.h" />
     <ClInclude Include="GLFW\glfw3.h" />
@@ -38,6 +40,7 @@
     <ClInclude Include="GL\glew.h" />
     <ClInclude Include="GL\glxew.h" />
     <ClInclude Include="GL\wglew.h" />
+    <ClInclude Include="input_manager.h" />
     <ClInclude Include="io.h" />
     <ClInclude Include="memory_tools.h" />
     <ClInclude Include="render_camera.h" />
@@ -90,36 +93,36 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="global_properties.props" />
+    <Import Project="shared_props.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="global_properties.props" />
+    <Import Project="shared_props.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="global_properties.props" />
+    <Import Project="shared_props.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="global_properties.props" />
+    <Import Project="shared_props.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)Build\Output\Build</OutDir>
-    <IntDir>$(SolutionDir)Build\Output\Intermediate</IntDir>
+    <OutDir>$(SolutionDir)..\Building\Output\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)..\Building\Intermediate\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)Build\Output\Build</OutDir>
-    <IntDir>$(SolutionDir)Build\Output\Intermediate</IntDir>
+    <OutDir>$(SolutionDir)..\Building\Output\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)..\Building\Intermediate\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)Build\Output\Build</OutDir>
-    <IntDir>$(SolutionDir)Build\Output\Intermediate</IntDir>
+    <OutDir>$(SolutionDir)..\Building\Output\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)..\Building\Intermediate\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)Build\Output\Build</OutDir>
-    <IntDir>$(SolutionDir)Build\Output\Intermediate</IntDir>
+    <OutDir>$(SolutionDir)..\Building\Output\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)..\Building\Intermediate\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -127,6 +130,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -142,6 +146,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -157,6 +162,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -172,6 +178,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

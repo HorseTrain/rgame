@@ -16,7 +16,7 @@ glm::mat4 transform::get_local_transform_matrix(transform* source)
 	glm::mat4 rotation_matrix = glm::mat4_cast(source->rotation);
 	glm::mat4 scale_matrix = glm::scale(glm::mat4(1), source->scale);
 
-	return position_matrix * rotation_matrix * scale_matrix;
+	return scale_matrix * rotation_matrix * position_matrix;
 }
 
 glm::mat4 transform::get_local_camera_transform_matrix(transform* source)
@@ -25,7 +25,7 @@ glm::mat4 transform::get_local_camera_transform_matrix(transform* source)
 	glm::mat4 rotation_matrix = glm::mat4_cast(source->rotation);
 	glm::mat4 scale_matrix = glm::scale(glm::mat4(1), source->scale);
 
-	return position_matrix * rotation_matrix * scale_matrix;
+	return scale_matrix * rotation_matrix * position_matrix;
 }
 
 glm::vec3 transform::get_forward(glm::mat4 source)

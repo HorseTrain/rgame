@@ -18,6 +18,7 @@ struct world
 	game_scene*				raw_scene;
 	input_manager			input_manager_context;
 	world_graphics_manager	world_graphics_manager_context;
+	float					render_distance;
 
 	chunk_manager			chunk_manager_context;
 	bool					world_started;

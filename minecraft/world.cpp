@@ -18,6 +18,8 @@ static void create_world_input_manager(world* world_context)
 
 	input_manager::register_key(input_manager_context, GLFW_KEY_LEFT_SHIFT);
 	input_manager::register_key(input_manager_context, GLFW_KEY_SPACE);
+
+	input_manager::register_key(input_manager_context, GLFW_KEY_ESCAPE);
 }
 
 void world::create(world* result, game_scene* raw_scene)
@@ -25,9 +27,12 @@ void world::create(world* result, game_scene* raw_scene)
 	result->raw_scene = raw_scene;
 	result->world_started = false;
 
+	result->render_distance = 20;
+
+	player::create(&result->main_player, result);
+
 	chunk_manager::create(&result->chunk_manager_context, result);
 	world_graphics_manager::create(&result->world_graphics_manager_context, result);
-	player::create(&result->main_player, result);
 
 	create_world_input_manager(result);
 }

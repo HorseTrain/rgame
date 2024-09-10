@@ -23,6 +23,11 @@ struct player
 	control_surface control_data;
 	transform		transform_context;
 
+	bool			mouse_is_locked;
+
+	float			camera_rotation_x;
+	float			camera_rotation_y;
+
 	static void create(player* result, world* world_context);
 	static void destroy(player* to_destroy);
 	static void update(player* player_context);

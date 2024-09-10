@@ -3,7 +3,7 @@
 #ifndef CHUNK_H
 #define CHUNK_H
 
-#define CHUNK_SIZE		100
+#define CHUNK_SIZE		16
 
 #define BLOCKS_PER_CHUNK (CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
 
@@ -25,8 +25,16 @@ struct chunk
 
 	int				x, y, z;
 
+	bool			is_secure;
+
+	static glm::vec3		get_position(chunk* chunk_context);
+	static float			get_distance_from_player(chunk* chunk_context);
+	static bool				in_render_distance(chunk* chunk_context);
+
 	block*					block_data;
 	std::vector<glm::ivec3>	blocks_to_generate;
+
+	chunk*					neighbors[6];
 
 	static void		create(chunk* result, int x, int y, int z, chunk_manager* manager);
 	static void		destroy(chunk* to_destroy);
