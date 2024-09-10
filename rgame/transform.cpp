@@ -28,6 +28,16 @@ glm::mat4 transform::get_local_camera_transform_matrix(transform* source)
 	return scale_matrix * rotation_matrix * position_matrix;
 }
 
+glm::mat4 transform::get_world_transform_matrix_recursive(transform* source)
+{
+	if (source->parent_transform == nullptr)
+	{
+		return get_local_camera_transform_matrix(source);
+	}
+
+	return get_local_camera_transform_matrix(source->parent_transform) * get_local_camera_transform_matrix(source);
+}
+
 glm::vec3 transform::get_forward(glm::mat4 source)
 {
 	return glm::vec3(source[0][2], source[1][2], source[2][2]);

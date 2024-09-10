@@ -5,12 +5,14 @@
 
 #include <string>
 
+#include "input_manager.h"
+
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 
 struct render_window;
 
-typedef void(*window_main_loop)(render_window* window, uint64_t frame_draw_time, void* arguments);
+typedef void(*window_main_loop)(render_window* window, void* arguments);
 
 struct render_window
 {
@@ -21,6 +23,8 @@ struct render_window
 
 	float			delta_time;
 	float			target_framerate;
+
+	input_manager	input_manager_context;
 
 	GLFWwindow*		raw_window;
 

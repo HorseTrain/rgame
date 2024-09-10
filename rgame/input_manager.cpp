@@ -1,10 +1,25 @@
 #include "input_manager.h"
 #include "render_window.h"
 
+static void register_key(input_manager* input_manager_context, int key)
+{
+	std::map<int, press_data>* key_data_ptr = &input_manager_context->requested_keys;
+
+	(*key_data_ptr)[key] = { 0, 0 };
+}
+
 void input_manager::create(input_manager* result, render_window* window)
 {
 	result->window = window;
 	result->requested_keys = std::map<int, press_data>();
+
+	for (int i = GLFW_KEY_SPACE; i < GLFW_KEY_END; ++i)
+	{
+		if (i > GLFW_KEY_WORLD_2 && i < GLFW_KEY_ESCAPE)
+			continue;
+
+		register_key(result, i);
+	}
 }
 
 void input_manager::update(input_manager* input_manager_context)
@@ -13,11 +28,11 @@ void input_manager::update(input_manager* input_manager_context)
 
 	for (auto i = key_data_ptr->begin(); i != key_data_ptr->end(); ++i)
 	{
-		int key				= i->first;
+		int key					= i->first;
 		press_data* data_ptr	= &i->second;
 
-		data_ptr->last_down = data_ptr->is_down;
-		data_ptr->is_down = glfwGetKey(input_manager_context->window->raw_window, key);
+		data_ptr->last_down		= data_ptr->is_down;
+		data_ptr->is_down		= glfwGetKey(input_manager_context->window->raw_window, key);
 	}
 
 	double mouse[2];
@@ -25,13 +40,6 @@ void input_manager::update(input_manager* input_manager_context)
 
 	input_manager_context->mouse_x = mouse[0];
 	input_manager_context->mouse_y = mouse[1];
-}
-
-void input_manager::register_key(input_manager* input_manager_context, int key)
-{
-	std::map<int, press_data>* key_data_ptr = &input_manager_context->requested_keys;
-
-	(*key_data_ptr)[key] = { 0, 0 };
 }
 
 bool input_manager::get_key_pressed(input_manager* input_manager_context, int key)

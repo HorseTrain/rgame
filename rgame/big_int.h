@@ -3,6 +3,9 @@
 #ifndef BIG_INT
 #define BIG_INT
 
+#include <inttypes.h>
+#include <string>
+
 static void big_int_add(uint8_t* result, uint8_t* left, uint8_t* right, int count)
 {
 	int carry = 0;

@@ -8,7 +8,7 @@
 
 struct render_camera
 {
-	transform	_transform;
+	transform	transform_context;
 	float		feild_of_view;
 	float		z_near;
 	float		z_far;

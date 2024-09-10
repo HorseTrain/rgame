@@ -22,6 +22,8 @@ void render_window::create(render_window* result, window_main_loop loop, uint32_
 	glfwMakeContextCurrent(result->raw_window);
 
 	glewInit();
+
+	input_manager::create(&result->input_manager_context, result);
 }
 
 void render_window::destroy(render_window* window)
@@ -57,9 +59,11 @@ void render_window::run(render_window* window, void* arguments)
 		glfwGetWindowSize(window->raw_window, (int*) & window->window_width, (int*) & window->window_height);
 		glViewport(0, 0, window->window_width, window->window_height);
 
+		input_manager::update(&window->input_manager_context);
+
 		if (window->loop != nullptr)
 		{
-			window->loop(window, 0, arguments);
+			window->loop(window, arguments);
 		}
 
 		swap_buffers(window);

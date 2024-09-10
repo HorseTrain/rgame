@@ -25,8 +25,6 @@ struct input_manager
 	static void create(input_manager* result, render_window* window);
 	static void update(input_manager* input_manager_context);
 
-	static void register_key(input_manager* input_manager_context, int key);
-
 	static bool get_key_pressed(input_manager* input_manager_context, int key);
 	static bool get_key_down(input_manager* input_manager_context, int key);
 	static bool get_key_up(input_manager* input_manager_context, int key);
