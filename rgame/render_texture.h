@@ -16,7 +16,7 @@ struct render_texture
 	static void		create(render_texture* result);
 	static void		destroy(render_texture* render_texture_context);
 	static void		load_from_file(render_texture* render_texture_context,std::string path);
-	static void		use(render_texture* render_texture_context);
+	static void		use(render_texture* render_texture_context, int texture_index);
 };
 
 #endif

@@ -39,9 +39,8 @@ void render_texture::load_from_file(render_texture* render_texture_context, std:
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 }
 
-void render_texture::use(render_texture* render_texture_context)
+void render_texture::use(render_texture* render_texture_context, int texture_index)
 {
 	glBindTexture(GL_TEXTURE_2D, render_texture_context->gl_handle);
-
 	glActiveTexture(render_texture_context->gl_handle);
 }

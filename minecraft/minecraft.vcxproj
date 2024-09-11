@@ -131,7 +131,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="chunk_manager.cpp" />
+    <ClCompile Include="chunk_mesh.cpp" />
     <ClCompile Include="entry.cpp" />
+    <ClCompile Include="graphics_asset.cpp" />
+    <ClCompile Include="graphics_asset_manager.cpp" />
+    <ClCompile Include="player.cpp" />
+    <ClCompile Include="render_shader_manager.cpp" />
+    <ClCompile Include="render_texture_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\rgame\rgame.vcxproj">
@@ -139,7 +146,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="chunk_manager.h" />
     <ClInclude Include="chunk_mesh.h" />
+    <ClInclude Include="game.h" />
+    <ClInclude Include="graphics_asset_manager.h" />
+    <ClInclude Include="player.h" />
+    <ClInclude Include="render_shader_manager.h" />
+    <ClInclude Include="render_texture_manager.h" />
+    <ClInclude Include="world.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
