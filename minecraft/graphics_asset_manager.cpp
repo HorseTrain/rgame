@@ -22,7 +22,7 @@ void graphics_asset::create(graphics_asset** graphics_asset_context, graphics_as
 	{
 		assert(false);
 
-		throw 0;
+		assert(false); throw 0;
 	}
 
 	graphics_asset_manager_context->assets[name] = working_result;
@@ -51,7 +51,7 @@ void graphics_asset::destroy(graphics_asset* graphics_asset_context)
 
 	default: 
 		assert(false);
-		throw 0;
+		assert(false); throw 0;
 	}
 }
 

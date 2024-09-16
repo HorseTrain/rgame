@@ -4,15 +4,24 @@
 #define PLAYER_H
 
 #include "rgame/transform.h"
+#include "rgame/glm/vec3.hpp"
 
-struct game;
+struct world;
+
+enum player_mode
+{
+	player_mode_spectator
+};
 
 struct player
 {
-	game*		game_context;
+	world*		world_context;
 	transform	transform_context;
+	player_mode mode;
 
-	static void create(player* player_context, game* game_context);
+	glm::vec3	current_velocity;
+
+	static void create(player* player_context, world* game_context);
 	static void destroy(player* player_context);
 	static void update(player* player_context);
 };

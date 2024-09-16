@@ -13,7 +13,7 @@ void input_manager::create(input_manager* result, render_window* window)
 	result->window = window;
 	result->requested_keys = std::map<int, press_data>();
 
-	for (int i = GLFW_KEY_SPACE; i < GLFW_KEY_END; ++i)
+	for (int i = GLFW_KEY_SPACE; i <= GLFW_KEY_LAST; ++i)
 	{
 		if (i > GLFW_KEY_WORLD_2 && i < GLFW_KEY_ESCAPE)
 			continue;
@@ -80,7 +80,7 @@ bool input_manager::get_key_up(input_manager* input_manager_context, int key)
 
 void input_manager::lock_mouse(input_manager* input_manager_context)
 {
-	glfwSetInputMode(input_manager_context->window->raw_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	glfwSetInputMode(input_manager_context->window->raw_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 void input_manager::unlock_mouse(input_manager* input_manager_context)

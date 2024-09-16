@@ -2,17 +2,18 @@
 
 #include "render_shader.h"
 #include "GL/glew.h"
+#include "assert.h"
 
 void render_shader::create(render_shader* result)
 {
 	result->handle = -1;
-	result->sources = std::vector<shader_source>();
+	result->sources = std::vector<render_shader_source>();
 	result->uniform_locations = nullptr;
 }
 
-shader_source shader_source::create(uint32_t type, std::string source)
+render_shader_source render_shader_source::create(uint32_t type, std::string source)
 {
-	shader_source result;
+	render_shader_source result;
 
 	result.shader_type = type;
 	result.source = source;
@@ -22,13 +23,16 @@ shader_source shader_source::create(uint32_t type, std::string source)
 
 void render_shader::append_shader_source(render_shader* program, uint32_t type, std::string source_code)
 {
-	shader_source working_source = { -1, type, source_code };
+	render_shader_source working_source = { -1, type, source_code };
 
 	program->sources.push_back(working_source);
 }
 
 void render_shader::compile(render_shader* program)
 {
+	if (program->handle != -1)
+		return;
+
 	program->uniform_locations = new std::map<std::string, int>();
 
 	render_shader::destroy(program);
@@ -37,9 +41,9 @@ void render_shader::compile(render_shader* program)
 
 	for (int i = 0; i < program->sources.size(); ++i)
 	{
-		shader_source* working_source = &program->sources[i];
+		render_shader_source* working_source = &program->sources[i];
 
-		shader_source::compile(working_source);
+		render_shader_source::compile(working_source);
 
 		glAttachShader(program->handle, working_source->handle);
 	}
@@ -56,9 +60,9 @@ void render_shader::destroy(render_shader* program)
 
 	for (int i = 0; i < program->sources.size(); ++i)
 	{
-		shader_source* working_source = &program->sources[i];
+		render_shader_source* working_source = &program->sources[i];
 
-		shader_source::destroy(working_source);
+		render_shader_source::destroy(working_source);
 	}
 
 	glDeleteProgram(program->handle);
@@ -98,9 +102,9 @@ int render_shader::get_uniform_location(render_shader* program, std::string name
 	return new_uniform_location;
 }
 
-void shader_source::compile(shader_source* source)
+void render_shader_source::compile(render_shader_source* source)
 {
-	shader_source::destroy(source);
+	render_shader_source::destroy(source);
 
 	uint32_t new_handle = glCreateShader(source->shader_type);
 	const char* c_string = source->source.c_str();
@@ -117,13 +121,13 @@ void shader_source::compile(shader_source* source)
 	{
 		std::cerr << error << std::endl;
 
-		throw 0;
+		assert(false); throw 0;
 	}
 
 	source->handle = new_handle;
 }
 
-void shader_source::destroy(shader_source* source)
+void render_shader_source::destroy(render_shader_source* source)
 {
 	if (source->handle == -1)
 		return;

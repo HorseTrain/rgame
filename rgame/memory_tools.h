@@ -10,6 +10,12 @@
 #include <iostream>
 #include <vector>
 
+enum allocator_type
+{
+	non_free,
+	free_allowed
+};
+
 struct arena_allocator
 {
 public:
@@ -20,7 +26,18 @@ public:
 	uint64_t			buffer_top;
 	arena_allocator*	child;
 
-	static arena_allocator create(uint64_t size)
+	allocator_type		type;
+
+	uint64_t			heap_bottom;
+	uint64_t			heap_top;
+
+	struct heap_allocation
+	{
+		void* buffer_location;
+		uint64_t allocation_size;
+	};
+
+	static arena_allocator create(uint64_t size, allocator_type type = non_free)
 	{
 		arena_allocator result;
 
@@ -29,6 +46,11 @@ public:
 
 		result.child = nullptr;
 		result.buffer_top = 0;
+
+		result.type = type;
+
+		result.heap_bottom = 0;
+		result.heap_top = size;
 
 		return result;
 	}
@@ -45,65 +67,43 @@ public:
 	
 	static void* allocate_recursive(arena_allocator* allocator, uint64_t size)
 	{
-		uint64_t result = allocator->buffer_top;
-		uint64_t new_location = result + size;
-
-		if (new_location >= allocator->buffer_size)
+		switch (allocator->type)
 		{
-			if (allocator->child == nullptr)
-			{
-				create_child(allocator, size);
-			}
-
-			return allocate_recursive(allocator->child, size);
-		}
-
-		allocator->buffer_top = new_location;
-
-		return (void*)(allocator->buffer + result);
-	}
-
-	/*
-	FOR SOME REASON, THIS FUNCTION RUNS A FEW THOUSAND NANOSECONDS SLOWER?
-	 
-	static void* allocate_non_recursive(arena_allocator* allocator, uint64_t size)
-	{
-		while (true)
+		case non_free:
 		{
-			void* working_result = nullptr;
-			bool current_allocation_was_successful;
-
 			uint64_t result = allocator->buffer_top;
 			uint64_t new_location = result + size;
 
 			if (new_location >= allocator->buffer_size)
-			{
-				current_allocation_was_successful = false;
-			}
-			else
-			{
-				current_allocation_was_successful = true;
-
-				allocator->buffer_top = new_location;
-				working_result = (void*)(allocator->buffer + result);
-			}
-
-			if (!current_allocation_was_successful)
 			{
 				if (allocator->child == nullptr)
 				{
 					create_child(allocator, size);
 				}
 
-				allocator = allocator->child;
+				return allocate_recursive(allocator->child, size);
 			}
-			else
+
+			allocator->buffer_top = new_location;
+
+			return (void*)(allocator->buffer + result);
+		}; break;
+
+		case free_allowed:
+		{
+			assert(false); throw 0;
+
+			for (uint64_t heap_bottom_location = allocator->buffer; heap_bottom_location < allocator->buffer + allocator->heap_bottom; heap_bottom_location += sizeof(heap_allocation))
 			{
-				return working_result;
+				heap_allocation* working_heap_allocation = (heap_allocation*)heap_bottom_location;
+
+
 			}
+		}; break;
+
+		default: assert(false); throw 0;
 		}
 	}
-	*/
 
 	template <typename T>
 	static T* allocate_struct(arena_allocator* allocator, uint64_t count = 1)
@@ -264,6 +264,17 @@ struct fast_array
 			array->data[i] = data[i];
 		}
 	}
+};
+
+template <typename K, typename V>
+struct universal_map
+{
+	struct map_element
+	{
+		intrusive_linked_list<K>::element* actual_element;
+	};
+
+	//intrusive_linked_list<K> keys;
 };
 
 #endif

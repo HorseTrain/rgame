@@ -75,6 +75,9 @@ void render_window::run(render_window* window, void* arguments)
 		double framerate = (1000000000.0 / (double)elapsed_nanoseconds);
 		double delta_time = (double)window->target_framerate / framerate;
 
+		if (delta_time > 1)
+			delta_time = 1;
+
 		window->delta_time = (float)delta_time;
 	}
 }

@@ -94,6 +94,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -122,6 +123,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,14 +133,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="block.cpp" />
+    <ClCompile Include="chunk.cpp" />
     <ClCompile Include="chunk_manager.cpp" />
     <ClCompile Include="chunk_mesh.cpp" />
+    <ClCompile Include="chunk_store.cpp" />
     <ClCompile Include="entry.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="graphics_asset.cpp" />
     <ClCompile Include="graphics_asset_manager.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="render_shader_manager.cpp" />
     <ClCompile Include="render_texture_manager.cpp" />
+    <ClCompile Include="thread_manager.cpp" />
+    <ClCompile Include="world.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\rgame\rgame.vcxproj">
@@ -146,13 +154,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="block.h" />
+    <ClInclude Include="chunk.h" />
     <ClInclude Include="chunk_manager.h" />
     <ClInclude Include="chunk_mesh.h" />
+    <ClInclude Include="chunk_store.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="graphics_asset_manager.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="render_shader_manager.h" />
     <ClInclude Include="render_texture_manager.h" />
+    <ClInclude Include="thread_manager.h" />
     <ClInclude Include="world.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
