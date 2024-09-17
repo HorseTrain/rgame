@@ -28,14 +28,12 @@ static void create_block_data(chunk* chunk_context, block* block_reference, int 
 	y = world_position.y;
 	z = world_position.z;
 
-	float freq = 0.007f;
-	float amplatude = 200;
+	float amp = 5;
+	float freq = 0.05;
 
-	float data0 = (sin(world_position.x * freq) + cos(world_position.y * freq) + sin(world_position.z * freq))* amplatude;
+	float height = (sin(x * freq) + sin(y * freq) + sin(z * freq)) * amp;
 
-	float data1 = 10;
-
-	if (y > data0)
+	if (y > height)
 	{
 		block_reference->is_transparent = true;
 	}
@@ -53,7 +51,7 @@ const char face_insert_pattern[] =
 	0b01
 };
 
-static void insert_face(chunk_mesh* working_mesh, int axis_0, int axis_1, int normal_index, ivec3b offset)
+static void insert_face(chunk_mesh* working_mesh, int axis_0, int axis_1, int normal_index, ivec3b offset, int block_id, int block_face, int single_texture_size = 16)
 {
 	for (int i = 0; i < 4; ++i)
 	{
@@ -62,7 +60,7 @@ static void insert_face(chunk_mesh* working_mesh, int axis_0, int axis_1, int no
 		uint8_t data_a0 = (active_faces & 1);
 		uint8_t data_a1 = (active_faces >> 1) & 1;
 
-		chunk_vertex working_vertex = chunk_vertex::create(0, 0, 0, normal_index, 0, 0);
+		chunk_vertex working_vertex = chunk_vertex::create(0, 0, 0, normal_index, (block_face * single_texture_size) + (data_a0 * single_texture_size), (block_id * single_texture_size) + (data_a1 * single_texture_size));
 
 		chunk_vertex::set_vertex_axis(&working_vertex, axis_0, data_a0);
 		chunk_vertex::set_vertex_axis(&working_vertex, axis_1, data_a1);
@@ -79,32 +77,32 @@ static void create_mesh_data_at(chunk_mesh* chunk_mesh_context,chunk* chunk_cont
 
 	if (chunk::get_block_reference(chunk_context, block_position.x + 1, block_position.y, block_position.z)->is_transparent)
 	{
-		insert_face(chunk_mesh_context, 2, 1, 1, block_reference->local_position + ivec3b(1, 0, 0));
+		insert_face(chunk_mesh_context, 2, 1, 1, block_reference->local_position + ivec3b(1, 0, 0), block_reference->block_id, 1);
 	}
 
 	if (chunk::get_block_reference(chunk_context, block_position.x - 1, block_position.y, block_position.z)->is_transparent)
 	{
-		insert_face(chunk_mesh_context, 1, 2, 0, block_reference->local_position + ivec3b(0, 0, 0));
+		insert_face(chunk_mesh_context, 1, 2, 0, block_reference->local_position + ivec3b(0, 0, 0), block_reference->block_id, 3);
 	}
 
 	if (chunk::get_block_reference(chunk_context, block_position.x, block_position.y + 1, block_position.z)->is_transparent)
 	{
-		insert_face(chunk_mesh_context, 0, 2, 3, block_reference->local_position + ivec3b(0, 1, 0));
+		insert_face(chunk_mesh_context, 0, 2, 3, block_reference->local_position + ivec3b(0, 1, 0), block_reference->block_id, 0);
 	}
 
 	if (chunk::get_block_reference(chunk_context, block_position.x, block_position.y - 1, block_position.z)->is_transparent)
 	{
-		insert_face(chunk_mesh_context, 2, 0, 2, block_reference->local_position + ivec3b(0, 0, 0));
+		insert_face(chunk_mesh_context, 2, 0, 2, block_reference->local_position + ivec3b(0, 0, 0), block_reference->block_id, 5);
 	}
 
 	if (chunk::get_block_reference(chunk_context, block_position.x, block_position.y, block_position.z + 1)->is_transparent)
 	{
-		insert_face(chunk_mesh_context, 1, 0, 5, block_reference->local_position + ivec3b(0, 0, 1));
+		insert_face(chunk_mesh_context, 1, 0, 5, block_reference->local_position + ivec3b(0, 0, 1), block_reference->block_id, 2);
 	}
 
 	if (chunk::get_block_reference(chunk_context, block_position.x, block_position.y, block_position.z - 1)->is_transparent)
 	{
-		insert_face(chunk_mesh_context, 0, 1, 4, block_reference->local_position);
+		insert_face(chunk_mesh_context, 0, 1, 4, block_reference->local_position, block_reference->block_id, 4);
 	}
 }
 

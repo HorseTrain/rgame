@@ -10,7 +10,8 @@ struct world;
 
 enum player_mode
 {
-	player_mode_spectator
+	player_mode_spectator,
+	player_mode_lab4
 };
 
 struct player

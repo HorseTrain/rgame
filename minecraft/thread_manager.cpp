@@ -8,7 +8,7 @@ static void call_function_set_running(thread_manager* thread_manager_context)
 	{
 		thread_manager_context->function_to_run((uint64_t*)thread_manager_context->current_arguments.data(), thread_manager_context->current_arguments.size());
 
-		//std::this_thread::sleep_for(std::chrono::milliseconds(2));
+		std::this_thread::sleep_for(std::chrono::milliseconds(2));
 	}
 }
 

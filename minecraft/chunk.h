@@ -13,6 +13,13 @@ struct block;
 struct chunk_mesh;
 struct chunk_manager;
 
+#define HOLE_SIZE 3
+
+static bool in_range(int source)
+{
+	return source > -HOLE_SIZE && source < HOLE_SIZE;
+}
+
 struct chunk
 {
 	chunk_mesh*			chunk_mesh_context;

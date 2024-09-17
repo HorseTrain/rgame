@@ -7,6 +7,7 @@
 #include "graphics_asset_manager.h"
 #include "rgame/render_shader.h"
 #include "rgame/render_window.h"
+#include "rgame/render_texture.h"
 #include <iostream>
 
 static void generate_chunks_around_player(chunk_manager* chunk_manager_context)
@@ -57,11 +58,15 @@ static void render_chunks(chunk_manager* chunk_manager_context, std::vector<chun
 	render_window* render_window_context = game_context->window_context;
 
 	render_shader* chunk_shader = (render_shader*)graphics_asset_manager_context->assets["default_chunk_shader"]->data;
+	render_texture* chunk_texture = (render_texture*)graphics_asset_manager_context->assets["default_chunk_texture"]->data;
 
 	render_shader::use(chunk_shader);
+	render_texture::use(chunk_texture, 0);
 
 	glm::mat4 camera_transform = render_camera::get_view_matrix(working_camera_context, render_window::get_aspect_ratio(render_window_context));
 	glUniformMatrix4fv(render_shader::get_uniform_location(chunk_shader, "camera_transform"), 1, false, (float*)&camera_transform);
+	glUniform2f(render_shader::get_uniform_location(chunk_shader, "texture_size"), chunk_texture->width, chunk_texture->height);
+	glUniform1i(render_shader::get_uniform_location(chunk_shader, "face_texture_size"), 16);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -218,7 +223,7 @@ void chunk_manager::create(chunk_manager* chunk_manager_context, world* world_co
 	thread_manager::start_thread(&chunk_manager_context->data_creation_thread, { chunk_manager_context });
 	thread_manager::start_thread(&chunk_manager_context->mesh_creation_thread, { chunk_manager_context });
 
-	chunk_manager_context->render_distance = 20;
+	chunk_manager_context->render_distance = 10;
 }
 
 void chunk_manager::destroy(chunk_manager* chunk_manager_context)

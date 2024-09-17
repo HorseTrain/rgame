@@ -2,13 +2,20 @@
 #include "rgame/render_window.h"
 #include <iostream>
 
-#define POSITION_SIZE 	6
-#define POSITION_MASK 	(1 << POSITION_SIZE) - 1
-#define X_OFFSET_BIT	POSITION_SIZE * 0
-#define Y_OFFSET_BIT 	POSITION_SIZE * 1
-#define Z_OFFSET_BIT 	POSITION_SIZE * 2
-#define NORMAL_OFFSET	Z_OFFSET_BIT + POSITION_SIZE
-#define NORMAL_MASK 	7
+#define POSITION_SIZE 		6
+#define UV_BIT_COUNT		5
+#define NORMAL_BIT_COUNT	3
+
+#define UV_MASK				(1 << UV_BIT_COUNT) - 1
+#define NORMAL_MASK			(1 << NORMAL_BIT_COUNT) - 1
+#define POSITION_MASK 		(1 << POSITION_SIZE) - 1
+
+#define X_OFFSET_BIT		POSITION_SIZE * 0
+#define Y_OFFSET_BIT 		POSITION_SIZE * 1
+#define Z_OFFSET_BIT 		POSITION_SIZE * 2
+#define NORMAL_OFFSET		Z_OFFSET_BIT + POSITION_SIZE
+#define X_UV_OFFSET			NORMAL_OFFSET + NORMAL_BIT_COUNT + (UV_BIT_COUNT * 0)
+#define Y_UV_OFFSET			NORMAL_OFFSET + NORMAL_BIT_COUNT + (UV_BIT_COUNT * 1)
 
 static void vertex_attribi_pointer(int index, int count, int type, int offset)
 {
@@ -90,6 +97,9 @@ chunk_vertex chunk_vertex::create(uint8_t x, uint8_t y, uint8_t z, uint8_t norma
 	raw_data_0 |= (z & POSITION_MASK) << Z_OFFSET_BIT;
 
 	raw_data_0 |= ((normal_index & NORMAL_MASK) << NORMAL_OFFSET);
+
+	raw_data_0 |= (texture_x & UV_MASK) << X_UV_OFFSET;
+	raw_data_0 |= (texture_y & UV_MASK) << Y_UV_OFFSET;
 
 	return { raw_data_0 };
 }

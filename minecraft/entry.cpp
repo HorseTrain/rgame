@@ -3,8 +3,10 @@
 #include "rgame/render_window.h"
 #include "rgame/render_shader.h"
 #include "rgame/io.h"
+#include "rgame/render_texture.h"
 
 #include "render_shader_manager.h"
+#include "render_texture_manager.h"
 #include "game.h"
 #include "world.h"
 
@@ -26,8 +28,10 @@ void loop(render_window* window, void* arguments)
 		game::create(&main_game, window, asset_path);
 		world::create(&main_world, &main_game, 0);
 
-		render_shader* tmp;
-		load_shader_from_path(&tmp, &main_game.graphics_asset_manager_context, "default_chunk_shader", &main_game.io_context, "shaders/default_chunk/");
+		render_shader* tmp_shader;
+		render_texture* tmp_texture;
+		load_shader_from_path(&tmp_shader, &main_game.graphics_asset_manager_context, "default_chunk_shader", &main_game.io_context, "shaders/default_chunk/");
+		load_texture_from_path(&tmp_texture, &main_game.graphics_asset_manager_context, "default_chunk_texture", &main_game.io_context, "t_atlas.gif");
 
 		started = true;
 	}
