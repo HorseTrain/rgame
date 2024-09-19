@@ -43,8 +43,6 @@ struct chunk_store
 	std::unordered_set<chunk*>				chunk_data_creation_que;
 	std::unordered_set<chunk*>				ghosted_chunks;
 
-	std::unordered_set<chunk*>				main_thread_destroyed_chunks;
-
 	std::mutex								chunk_access_lock;
 	std::mutex								creation_que_access_lock;
 	std::mutex								ghost_chunks_lock;
@@ -54,7 +52,7 @@ struct chunk_store
 	static void								create(chunk_store* chunk_store_context, chunk_manager* chunk_manager_context);
 	static void								destroy(chunk_store* chunk_store_context);
 	static chunk*							create_or_get_chunk(chunk_store* chunk_store_context, KEY_TYPE location);
-	static void								ghost_chunk(chunk_store* chunk_store_context, chunk* chunk_context);
+	static void								ghost_chunk(chunk_store* chunk_store_context, chunk* chunk_context, uint64_t* times);
 	static void								destroy_ghost_chunks(chunk_store* chunk_store_context);
 	static void								append_chunk_to_creation_que(chunk_store* chunk_store_context, chunk* chunk_context);
 	static void								remove_chunk_from_creation_que(chunk_store* chunk_store_context, chunk* chunk_context);

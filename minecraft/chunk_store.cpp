@@ -48,7 +48,7 @@ chunk* chunk_store::create_or_get_chunk(chunk_store* chunk_store_context, KEY_TY
 	return new_chunk;
 }
 
-void chunk_store::ghost_chunk(chunk_store* chunk_store_context, chunk* chunk_context)
+void chunk_store::ghost_chunk(chunk_store* chunk_store_context, chunk* chunk_context, uint64_t* times)
 {
 	std::mutex* lock = &chunk_store_context->ghost_chunks_lock;
 
@@ -66,6 +66,8 @@ void chunk_store::ghost_chunk(chunk_store* chunk_store_context, chunk* chunk_con
 	all_chunks->erase(location);
 	ghosted_chunks->insert(chunk_context);
 
+	memcpy(chunk_context->destruction_times, times, sizeof(uint64_t) * 3);
+
 	lock->unlock();
 }
 
@@ -79,11 +81,10 @@ void chunk_store::destroy_ghost_chunks(chunk_store* chunk_store_context)
 
 	for (auto i = ghosted_chunks->begin(); i != ghosted_chunks->end(); ++i)
 	{
-		chunk_store_context->main_thread_destroyed_chunks.insert(*i);
-		chunk::destroy(*i);
+
 	}
 
-	*ghosted_chunks = std::unordered_set<chunk*>();
+	//*ghosted_chunks = std::unordered_set<chunk*>();
 
 	lock->unlock();
 }

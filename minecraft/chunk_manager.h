@@ -14,6 +14,8 @@ struct chunk_manager
 	chunk_store		chunks;
 	int				render_distance;
 
+	uint64_t		time;
+
 	thread_manager	data_creation_thread;
 	thread_manager	mesh_creation_thread;
 

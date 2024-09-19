@@ -7,13 +7,16 @@
 
 #include "rgame/glm/vec3.hpp"
 #include "rgame/r_math.h"
+#include <atomic>
 #include <unordered_set>
+#include <vector>
 
 struct block;
 struct chunk_mesh;
 struct chunk_manager;
 
 #define HOLE_SIZE 3
+#define TIME_COUNT 3
 
 static bool in_range(int source)
 {
@@ -36,10 +39,15 @@ struct chunk
 
 	chunk*				neighbors[6];
 
-	bool				marked_for_destruction;
+	uint64_t			destruction_times[TIME_COUNT];
+	std::vector<ivec3b>	block_locations;
+
+	std::atomic_bool	marked_for_destruction;
+	std::atomic_bool	generating_data;
 
 	int					non_transparent;
 
+	static uint64_t		get_minimum_destruction_time(chunk* chunk_context, uint64_t* times);
 	static bool			neighbors_marked_for_destruction(chunk* chunk_store_context);
 	static void			create(chunk** result, chunk_manager* chunk_manager_context, glm::ivec3 position);
 	static void			destroy(chunk* chunk_context, bool deallocate = true);
@@ -53,6 +61,7 @@ struct chunk
 	static block*		get_block_reference(chunk* chunk_context, int x, int y, int z);
 	static bool			in_render_distance(chunk* chunk_context);
 	static void			ghost_neighbors(chunk* chunk_context);
+	static bool			ready_for_deallocation(chunk* chunk_context);
 };
 
 #endif

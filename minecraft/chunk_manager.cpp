@@ -41,7 +41,7 @@ static void generate_chunks_around_que(chunk_manager* chunk_manager_context, std
 		{
 			glm::ivec3 new_position = chunk::request_chunk_neighbor_offset(entry_chunk, i);
 
-			if (glm::distance(glm::vec3(new_position), player_position) > render_distance)
+			if (glm::distance(glm::vec3(new_position), player_position) >= render_distance)
 				continue;
 
 			chunk_store::create_or_get_chunk(&chunk_manager_context->chunks, chunk::request_chunk_neighbor_offset(entry_chunk, i));
@@ -120,20 +120,6 @@ static void create_chunk_mesh_data(uint64_t* arguments, int argument_count)
 	chunk_manager* chunk_manager_context = (chunk_manager*)arguments[0];
 	chunk_store* chunk_store_context = &chunk_manager_context->chunks;
 
-	std::unordered_map<KEY_TYPE, chunk*> all_chunks = chunk_manager_context->chunks.chunks;
-
-	for (auto i = all_chunks.begin(); i != all_chunks.end(); ++i)
-	{
-		chunk* working_chunk = i->second;
-
-		if (working_chunk->marked_for_destruction)
-		{
-			chunk_store::ghost_chunk(chunk_store_context, working_chunk);
-		}
-	}
-
-	chunk_store::destroy_ghost_chunks(chunk_store_context);
-
 	if (chunk_store::creation_que_is_empty(chunk_store_context))
 		return;
 
@@ -155,6 +141,36 @@ static void create_chunk_mesh_data(uint64_t* arguments, int argument_count)
 			working_chunk->mesh_ready = true;
 		}
 	}
+
+	std::unordered_set<chunk*>* ghost_que = &chunk_manager_context->chunks.ghosted_chunks;
+	std::vector<chunk*> to_destroy;
+
+	for (auto i = ghost_que->begin(); i != ghost_que->end(); ++i)
+	{
+		uint64_t times[] = { chunk_manager_context->time, chunk_manager_context->data_creation_thread.time, chunk_manager_context->mesh_creation_thread.time };
+
+		uint64_t min_time = chunk::get_minimum_destruction_time(*i, times);
+
+		if (min_time > 1)
+		{
+			to_destroy.push_back(*i);
+		}
+	}
+
+	auto start_time = std::chrono::high_resolution_clock::now();
+
+	for (int i = 0; i < to_destroy.size(); ++i)
+	{
+		auto end_time = std::chrono::high_resolution_clock::now();
+
+		auto elapsed_miliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
+
+		if (elapsed_miliseconds > 5)
+			return;
+
+		ghost_que->erase(to_destroy[i]);
+		chunk::destroy(to_destroy[i]);
+	}
 }
 
 static void update_current_chunks(chunk_manager* chunk_manager_context)
@@ -164,29 +180,23 @@ static void update_current_chunks(chunk_manager* chunk_manager_context)
 
 	std::vector<chunk*> to_render;
 	std::vector<chunk*> to_generate_neighbors;
-
-	chunk_store_context->ghost_chunks_lock.lock();
-
-	auto destroyed_chunks_last = chunk_store_context->main_thread_destroyed_chunks;
-	chunk_store_context->main_thread_destroyed_chunks = std::unordered_set<chunk*>();
-
-	chunk_store_context->ghost_chunks_lock.unlock();
-
+	
 	for (auto i = chunks.begin(); i != chunks.end(); ++i)
 	{
 		chunk* working_chunk = i->second;
-
-		if (destroyed_chunks_last.find(working_chunk) != destroyed_chunks_last.end())
-			continue;
 
 		if (working_chunk->marked_for_destruction)
 		{
 			continue;
 		}
 
-		if (!chunk::in_render_distance(working_chunk) && working_chunk->data_ready)
+		if (!chunk::in_render_distance(working_chunk) && working_chunk->data_ready && !working_chunk->generating_data)
 		{
 			working_chunk->marked_for_destruction = true;
+
+			uint64_t times[] = { chunk_manager_context->time, chunk_manager_context->data_creation_thread.time, chunk_manager_context->mesh_creation_thread.time };
+
+			chunk_store::ghost_chunk(chunk_store_context, working_chunk, times);
 
 			continue;
 		}
@@ -223,23 +233,24 @@ void chunk_manager::create(chunk_manager* chunk_manager_context, world* world_co
 	thread_manager::start_thread(&chunk_manager_context->data_creation_thread, { chunk_manager_context });
 	thread_manager::start_thread(&chunk_manager_context->mesh_creation_thread, { chunk_manager_context });
 
-	chunk_manager_context->render_distance = 10;
+	chunk_manager_context->time = 0;
+
+	chunk_manager_context->render_distance = 20;
 }
 
 void chunk_manager::destroy(chunk_manager* chunk_manager_context)
 {
-	chunk_store::destroy(&chunk_manager_context->chunks);
-
 	thread_manager::destroy(&chunk_manager_context->data_creation_thread);
 	thread_manager::destroy(&chunk_manager_context->mesh_creation_thread);
+
+	chunk_store::destroy(&chunk_manager_context->chunks);
 }
 
 void chunk_manager::update(chunk_manager* chunk_manager_context)
 {
 	uint64_t arguments[] = { (uint64_t)chunk_manager_context };
 
-	update_current_chunks(chunk_manager_context);
+	chunk_manager_context->time++;
 
-	//create_chunk_data(arguments, 1);
-	//create_chunk_mesh_data(arguments, 1);
+	update_current_chunks(chunk_manager_context);
 }

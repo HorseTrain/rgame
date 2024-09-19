@@ -12,9 +12,12 @@ typedef void(*thread_function)(uint64_t* arguments, int argument_count);
 struct thread_manager
 {
 	bool				is_running;
+	bool				execution_done;
 	std::thread*		raw_thread;
 	thread_function		function_to_run;
 	std::vector<void*>	current_arguments;
+
+	uint64_t			time;
 
 	static void			create(thread_manager* result, thread_function function_to_run);
 	static void			destroy(thread_manager* thread_manager_context);

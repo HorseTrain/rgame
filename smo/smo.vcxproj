@@ -132,11 +132,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="entry.cpp" />
+    <ClCompile Include="render\render_mesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\rgame\rgame.vcxproj">
       <Project>{9894d405-4a69-40c3-898b-0871a1b3cf54}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="asset\r_asset.h" />
+    <ClInclude Include="render\render_mesh.h" />
+    <ClInclude Include="render\render_vertex.h" />
+    <ClInclude Include="tools\memory_tools.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

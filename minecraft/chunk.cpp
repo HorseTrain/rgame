@@ -18,11 +18,8 @@
 
 static void create_block_data(chunk* chunk_context, block* block_reference, int x, int y, int z)
 {
-	block_reference->chunk_context = chunk_context;
-
-	block_reference->local_position = ivec3b(x, y, z);
-
-	glm::ivec3 world_position = block::get_global_position(block_reference);
+	ivec3b local_position = ivec3b(x, y, z);
+	glm::ivec3 world_position = glm::ivec3(x, y, z) + chunk_context->position;
 
 	x = world_position.x;
 	y = world_position.y;
@@ -40,6 +37,11 @@ static void create_block_data(chunk* chunk_context, block* block_reference, int 
 	else
 	{
 		block_reference->is_transparent = false;
+	}
+
+	if (!block_reference->is_transparent)
+	{
+		chunk_context->block_locations.push_back(local_position);
 	}
 }
 
@@ -71,39 +73,63 @@ static void insert_face(chunk_mesh* working_mesh, int axis_0, int axis_1, int no
 	}
 }
 
-static void create_mesh_data_at(chunk_mesh* chunk_mesh_context,chunk* chunk_context, block* block_reference)
+static void create_mesh_data_at(chunk_mesh* chunk_mesh_context,chunk* chunk_context, ivec3b xyz)
 {
-	ivec3b block_position = block_reference->local_position;
+	int x = xyz.x;
+	int y = xyz.y;
+	int z = xyz.z;
 
-	if (chunk::get_block_reference(chunk_context, block_position.x + 1, block_position.y, block_position.z)->is_transparent)
+	if (chunk::get_block_reference(chunk_context, x + 1, y, z)->is_transparent)
 	{
-		insert_face(chunk_mesh_context, 2, 1, 1, block_reference->local_position + ivec3b(1, 0, 0), block_reference->block_id, 1);
+		insert_face(chunk_mesh_context, 2, 1, 1, xyz + ivec3b(1, 0, 0), 0, 1);
 	}
 
-	if (chunk::get_block_reference(chunk_context, block_position.x - 1, block_position.y, block_position.z)->is_transparent)
+	if (chunk::get_block_reference(chunk_context, x - 1, y, z)->is_transparent)
 	{
-		insert_face(chunk_mesh_context, 1, 2, 0, block_reference->local_position + ivec3b(0, 0, 0), block_reference->block_id, 3);
+		insert_face(chunk_mesh_context, 1, 2, 0, xyz + ivec3b(0, 0, 0), 0, 3);
 	}
 
-	if (chunk::get_block_reference(chunk_context, block_position.x, block_position.y + 1, block_position.z)->is_transparent)
+	if (chunk::get_block_reference(chunk_context, x, y + 1, z)->is_transparent)
 	{
-		insert_face(chunk_mesh_context, 0, 2, 3, block_reference->local_position + ivec3b(0, 1, 0), block_reference->block_id, 0);
+		insert_face(chunk_mesh_context, 0, 2, 3, xyz + ivec3b(0, 1, 0), 0, 0);
 	}
 
-	if (chunk::get_block_reference(chunk_context, block_position.x, block_position.y - 1, block_position.z)->is_transparent)
+	if (chunk::get_block_reference(chunk_context, x, y - 1, z)->is_transparent)
 	{
-		insert_face(chunk_mesh_context, 2, 0, 2, block_reference->local_position + ivec3b(0, 0, 0), block_reference->block_id, 5);
+		insert_face(chunk_mesh_context, 2, 0, 2, xyz + ivec3b(0, 0, 0), 0, 5);
 	}
 
-	if (chunk::get_block_reference(chunk_context, block_position.x, block_position.y, block_position.z + 1)->is_transparent)
+	if (chunk::get_block_reference(chunk_context, x, y, z + 1)->is_transparent)
 	{
-		insert_face(chunk_mesh_context, 1, 0, 5, block_reference->local_position + ivec3b(0, 0, 1), block_reference->block_id, 2);
+		insert_face(chunk_mesh_context, 1, 0, 5, xyz + ivec3b(0, 0, 1), 0, 2);
 	}
 
-	if (chunk::get_block_reference(chunk_context, block_position.x, block_position.y, block_position.z - 1)->is_transparent)
+	if (chunk::get_block_reference(chunk_context, x, y, z - 1)->is_transparent)
 	{
-		insert_face(chunk_mesh_context, 0, 1, 4, block_reference->local_position, block_reference->block_id, 4);
+		insert_face(chunk_mesh_context, 0, 1, 4, xyz, 0, 4);
 	}
+}
+
+uint64_t chunk::get_minimum_destruction_time(chunk* chunk_context, uint64_t* times)
+{
+	uint64_t all_times[TIME_COUNT];
+
+	for (int i = 0; i < TIME_COUNT; ++i)
+	{
+		all_times[i] = times[i] - chunk_context->destruction_times[i];
+	}
+
+	uint64_t min = ULLONG_MAX;
+
+	for (int i = 0; i < TIME_COUNT; ++i)
+	{
+		if (all_times[i] < min)
+		{
+			min = all_times[i];
+		}
+	}
+
+	return min;
 }
 
 bool chunk::neighbors_marked_for_destruction(chunk* chunk_context)
@@ -160,7 +186,11 @@ void chunk::destroy(chunk* chunk_mesh_context, bool deallocate)
 
 void chunk::generate_data(chunk* chunk_context)
 {
+	chunk_context->generating_data = true;
+
 	chunk_context->non_transparent = 0;
+
+	chunk_context->block_locations.reserve(CUBE_CHUNK_SIZE * CUBE_CHUNK_SIZE * CUBE_CHUNK_SIZE);
 
 	for (int x = 0; x < CUBE_CHUNK_SIZE; ++x)
 	{
@@ -177,6 +207,8 @@ void chunk::generate_data(chunk* chunk_context)
 			}
 		}
 	}
+
+	chunk_context->generating_data = false;
 }
 
 void chunk::generate_mesh(chunk* chunk_context)
@@ -191,23 +223,18 @@ void chunk::generate_mesh(chunk* chunk_context)
 	if (chunk_context->non_transparent == 0)
 		return;
 
+	chunk_context->generating_data = true;
+
 	chunk_mesh* working_mesh = chunk_context->chunk_mesh_context;
 
-	for (int x = 0; x < CUBE_CHUNK_SIZE; ++x)
+	for (int i = 0; i < chunk_context->block_locations.size(); ++i)
 	{
-		for (int y = 0; y < CUBE_CHUNK_SIZE; ++y)
-		{
-			for (int z = 0; z < CUBE_CHUNK_SIZE; ++z)
-			{
-				block* block = get_block_reference(chunk_context, x, y, z);
+		ivec3b location = chunk_context->block_locations[i];
 
-				if (block->is_transparent)
-					continue;
-
-				create_mesh_data_at(working_mesh,chunk_context, block);
-			}
-		}
+		create_mesh_data_at(working_mesh, chunk_context, location);
 	}
+
+	chunk_context->generating_data = false;
 }
 
 glm::ivec3 chunk::request_chunk_neighbor_offset(chunk* chunk_context, int index)
@@ -317,92 +344,6 @@ int chunk::get_block_index(int x, int y, int z)
 {
 	return (x * CUBE_CHUNK_SIZE * CUBE_CHUNK_SIZE) + (y * CUBE_CHUNK_SIZE) + z;
 }
-
-/*
-block* chunk::get_block_reference(chunk* chunk_context, int x, int y, int z)
-{
-	chunk_store* chunk_store_context = &chunk_context->chunk_manager_context->chunks;
-	chunk* other_chunk = nullptr;
-
-	bool out_of_bounds = false;
-
-	if (x >= CUBE_CHUNK_SIZE)
-	{
-		out_of_bounds = true;
-
-		x -= CUBE_CHUNK_SIZE;
-
-		other_chunk = chunk_store::request_chunk(chunk_store_context, chunk::request_chunk_neighbor_offset(chunk_context, NEIGHBOR_PX));
-	}
-
-	if (x < 0)
-	{
-		out_of_bounds = true;
-
-		x += CUBE_CHUNK_SIZE;
-
-		other_chunk = chunk_store::request_chunk(chunk_store_context, chunk::request_chunk_neighbor_offset(chunk_context, NEIGHBOR_NX));
-	}
-
-	if (y >= CUBE_CHUNK_SIZE)
-	{
-		out_of_bounds = true;
-
-		y -= CUBE_CHUNK_SIZE;
-
-		other_chunk = chunk_store::request_chunk(chunk_store_context, chunk::request_chunk_neighbor_offset(chunk_context, NEIGHBOR_PY));
-	}
-
-	if (y < 0)
-	{
-		out_of_bounds = true;
-
-		y += CUBE_CHUNK_SIZE;
-
-		other_chunk = chunk_store::request_chunk(chunk_store_context, chunk::request_chunk_neighbor_offset(chunk_context, NEIGHBOR_NY));
-	}
-
-	if (z >= CUBE_CHUNK_SIZE)
-	{
-		out_of_bounds = true;
-
-		z -= CUBE_CHUNK_SIZE;
-
-		other_chunk = chunk_store::request_chunk(chunk_store_context, chunk::request_chunk_neighbor_offset(chunk_context, NEIGHBOR_PZ));
-	}
-
-	if (z < 0)
-	{
-		out_of_bounds = true;
-
-		z += CUBE_CHUNK_SIZE;
-
-		other_chunk = chunk_store::request_chunk(chunk_store_context, chunk::request_chunk_neighbor_offset(chunk_context, NEIGHBOR_NZ));
-	}
-
-	if (out_of_bounds)
-	{
-		chunk_context->block_data[0];
-
-		if (other_chunk == nullptr)
-		{
-			assert(false);
-
-			std::cout << "Error lol" << std::endl;
-
-			throw 0;
-		}
-
-		return get_block_reference(other_chunk, x, y, z);
-	}
-
-	int chunk_index = get_block_index(x, y, z);
-
-	block* result = &chunk_context->block_data[chunk_index];
-
-	return result;
-}
-*/
 
 block* chunk::get_block_reference(chunk* chunk_context, int x, int y, int z)
 {
@@ -519,4 +460,9 @@ void chunk::ghost_neighbors(chunk* chunk_context)
 			}
 		}
 	}
+}
+
+bool chunk::ready_for_deallocation(chunk* chunk_context)
+{
+	return false;
 }

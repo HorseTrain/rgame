@@ -3,7 +3,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir);$(ProjectDir);$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\Building\Output\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)..\Building\Intermediate\$(ProjectName)\</IntDir>
   </PropertyGroup>
