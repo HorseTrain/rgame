@@ -1,9 +1,0 @@
-{
-  "GameTitle": "Mario 3D Land",
-  "Platform": "N3DS",
-  "PrismThickness": 40.0,
-  "SphereRadius": 0.0,
-  "Comments": "This game uses bcsv to customize presets.",
-  "MaterialPresets": {
-  }
-}
