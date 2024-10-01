@@ -4,6 +4,7 @@
 #define MEMORY_TOOLS_H
 
 #include <string>
+#include <assert.h>
 
 template <typename T>
 struct array_container
@@ -20,6 +21,13 @@ struct array_container
 	static void destroy(array_container* array_context)
 	{
 		free(array_context->data);
+	}
+
+	T& operator [] (int index)
+	{
+		assert(index >= 0 && index < count);
+
+		return data[index];
 	}
 };
 

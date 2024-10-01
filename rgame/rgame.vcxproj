@@ -25,6 +25,7 @@
     <ClCompile Include="render_shader.cpp" />
     <ClCompile Include="render_texture.cpp" />
     <ClCompile Include="render_window.cpp" />
+    <ClCompile Include="r_asset.cpp" />
     <ClCompile Include="transform.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -42,7 +43,9 @@
     <ClInclude Include="render_shader.h" />
     <ClInclude Include="render_texture.h" />
     <ClInclude Include="render_window.h" />
+    <ClInclude Include="r_asset.h" />
     <ClInclude Include="r_math.h" />
+    <ClInclude Include="shader_compiler.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="string_tools.h" />
     <ClInclude Include="transform.h" />

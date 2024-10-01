@@ -131,8 +131,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="asset\asset_instance.cpp" />
+    <ClCompile Include="asset\model_importer.cpp" />
     <ClCompile Include="entry.cpp" />
-    <ClCompile Include="render\render_mesh.cpp" />
+    <ClCompile Include="render\static_render_mesh.cpp" />
+    <ClCompile Include="render\render_model.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\rgame\rgame.vcxproj">
@@ -140,9 +143,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="asset\r_asset.h" />
-    <ClInclude Include="render\render_mesh.h" />
+    <ClInclude Include="asset\asset_instance.h" />
+    <ClInclude Include="asset\model_importer.h" />
+    <ClInclude Include="asset\r_asset_primative_type.h" />
+    <ClInclude Include="asset\shader_importer.h" />
+    <ClInclude Include="render\render_material.h" />
+    <ClInclude Include="render\static_render_mesh.h" />
+    <ClInclude Include="render\render_model.h" />
     <ClInclude Include="render\render_vertex.h" />
+    <ClInclude Include="render\uniform_data.h" />
     <ClInclude Include="tools\memory_tools.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

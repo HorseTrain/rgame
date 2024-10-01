@@ -23,9 +23,9 @@ struct render_shader_source
 
 struct render_shader
 {
-	uint32_t					handle;
+	uint32_t							handle;
 	std::vector<render_shader_source>	sources;
-	std::map<std::string, int>*	uniform_locations;
+	std::map<std::string, int>*			uniform_locations;
 
 	static void					create(render_shader* result);
 	static void					append_shader_source(render_shader* program, uint32_t type, std::string source_code);
