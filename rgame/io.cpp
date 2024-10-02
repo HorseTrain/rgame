@@ -110,6 +110,13 @@ bool io::file_exists(std::string path)
 	return result;
 }
 
+bool io::file_exists(io* io_context, std::string path)
+{
+	path = get_path(io_context, path);
+
+	return file_exists(path);
+}
+
 void io::create(io* io_context, std::string asset_path)
 {
 	io_context->asset_path = asset_path;

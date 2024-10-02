@@ -26,6 +26,7 @@
     <ClCompile Include="render_texture.cpp" />
     <ClCompile Include="render_window.cpp" />
     <ClCompile Include="r_asset.cpp" />
+    <ClCompile Include="shader_compiler.cpp" />
     <ClCompile Include="transform.cpp" />
   </ItemGroup>
   <ItemGroup>

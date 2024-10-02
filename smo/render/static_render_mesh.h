@@ -8,6 +8,8 @@
 #include "tools/memory_tools.h"
 #include "render_vertex.h"
 
+struct asset_collection;
+
 struct static_render_mesh
 {
 	array_container<render_vertex>	vertices;
@@ -28,6 +30,8 @@ struct static_render_mesh
 	static void						calculate_normals(static_render_mesh* static_render_mesh_context);
 
 	static void						create_triangle(static_render_mesh* result);
+
+	static void						create_mesh_with_asset_collection(static_render_mesh** result, asset_collection* asset_collection_context, std::string name);
 };
 
 #endif

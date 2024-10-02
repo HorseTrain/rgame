@@ -1,5 +1,5 @@
 #include "render_model.h"
-#include "asset/asset_instance.h"
+#include "asset/asset_collection.h"
 
 void render_model::create(render_model* result, std::string name)
 {

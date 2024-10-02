@@ -2,6 +2,7 @@
 #include "rgame/render_window.h"
 
 #include "rgame/glm/glm.hpp"
+#include "asset/asset_collection.h"
 
 static void vertex_attrib_pointer(int index, int size,int type,int offset)
 {
@@ -26,16 +27,17 @@ static void set_attrib_data()
 {
 	vertex_attrib_pointer(0, 2, GL_FLOAT, offsetof(render_vertex, render_vertex::uv_0));
 	vertex_attrib_pointer(1, 2, GL_FLOAT, offsetof(render_vertex, render_vertex::uv_1));
+	vertex_attrib_pointer(2, 2, GL_FLOAT, offsetof(render_vertex, render_vertex::uv_2));
 
-	vertex_attrib_pointer(2, 3, GL_FLOAT, offsetof(render_vertex, render_vertex::position));
-	vertex_attrib_pointer(3, 3, GL_FLOAT, offsetof(render_vertex, render_vertex::normal));
-	vertex_attrib_pointer(4, 3, GL_FLOAT, offsetof(render_vertex, render_vertex::tangent));
-	vertex_attrib_pointer(5, 3, GL_FLOAT, offsetof(render_vertex, render_vertex::bi_tangnet));
+	vertex_attrib_pointer(3, 3, GL_FLOAT, offsetof(render_vertex, render_vertex::position));
+	vertex_attrib_pointer(4, 3, GL_FLOAT, offsetof(render_vertex, render_vertex::normal));
+	vertex_attrib_pointer(5, 3, GL_FLOAT, offsetof(render_vertex, render_vertex::tangent));
+	vertex_attrib_pointer(6, 3, GL_FLOAT, offsetof(render_vertex, render_vertex::bi_tangnet));
 
-	vertex_attrib_pointer(6, 4, GL_INT, offsetof(render_vertex, render_vertex::weight_index));
-	vertex_attrib_pointer(7, 4, GL_FLOAT, offsetof(render_vertex, render_vertex::weight_data));
+	vertex_attrib_pointer(7, 4, GL_FLOAT, offsetof(render_vertex, render_vertex::color));
 
-	vertex_attrib_pointer(8, 4, GL_FLOAT, offsetof(render_vertex, render_vertex::color));
+	vertex_attrib_pointer(8, 4, GL_INT, offsetof(render_vertex, render_vertex::weight_index));
+	vertex_attrib_pointer(9, 4, GL_FLOAT, offsetof(render_vertex, render_vertex::weight_data));
 }
 
 void static_render_mesh::create(static_render_mesh* result, int primitive_type, int vertex_count, int index_count)
@@ -170,4 +172,33 @@ void static_render_mesh::create_triangle(static_render_mesh* result)
 	result->vertices[0] = render_vertex::create_position(0, 0, 0);
 	result->vertices[1] = render_vertex::create_position(1, 0, 0);
 	result->vertices[2] = render_vertex::create_position(1, 1, 0);
+}
+
+static void create_mesh_asset(asset_instance* asset_instance_context, void** arguments)
+{
+	asset_instance_context->buffer = new static_render_mesh();
+
+	static_render_mesh** result = (static_render_mesh**)arguments[0];
+
+	*result = (static_render_mesh*)asset_instance_context->buffer;
+}
+
+static void destroy_mesh_asset(asset_instance* asset_instance_context, void** arguments)
+{
+	static_render_mesh* mesh_context = (static_render_mesh*)asset_instance_context->buffer;
+
+	static_render_mesh::destroy(mesh_context);
+
+	delete mesh_context;
+}
+
+void static_render_mesh::create_mesh_with_asset_collection(static_render_mesh** result, asset_collection* asset_collection_context, std::string name)
+{
+	void* arguments[] = {
+		result
+	};
+
+	asset_instance* instance;
+	asset_collection::create_asset_instance(&instance, asset_collection_context, create_mesh_asset, destroy_mesh_asset, name);
+	asset_instance::create_asset(instance, arguments);
 }

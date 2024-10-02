@@ -266,15 +266,4 @@ struct fast_array
 	}
 };
 
-template <typename K, typename V>
-struct universal_map
-{
-	struct map_element
-	{
-		intrusive_linked_list<K>::element* actual_element;
-	};
-
-	//intrusive_linked_list<K> keys;
-};
-
 #endif

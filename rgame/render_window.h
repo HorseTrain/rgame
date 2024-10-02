@@ -12,11 +12,13 @@
 
 struct render_window;
 
-typedef void(*window_main_loop)(render_window* window, void* arguments);
+typedef void(*window_function)(render_window* window, void* arguments);
 
 struct render_window
 {
-	window_main_loop loop;
+	window_function start;
+	window_function loop;
+	window_function end;
 
 	uint32_t		window_width;
 	uint32_t		window_height;
@@ -28,8 +30,9 @@ struct render_window
 
 	GLFWwindow*		raw_window;
 
-	static void		create(render_window* result, window_main_loop loop, uint32_t window_width, uint32_t window_height, float target_framerate, std::string window_name);
-	static void		destroy(render_window* window);
+	static void		create(render_window* result, window_function start, window_function loop, window_function end, uint32_t window_width, uint32_t window_height, float target_framerate, std::string window_name);
+	static void		create(render_window* result, window_function loop, uint32_t window_width, uint32_t window_height, float target_framerate, std::string window_name);
+	static void		destroy(render_window* window, bool destroy_glfw_global = true);
 	static void		make_context_current(render_window* window);
 	static bool		should_window_close(render_window* window);
 	static void		poll_events(render_window* window);

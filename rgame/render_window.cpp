@@ -5,9 +5,12 @@
 
 static bool glfw_context_open = false;
 
-void render_window::create(render_window* result, window_main_loop loop, uint32_t window_width, uint32_t window_height,float target_framerate, std::string window_name)
+void render_window::create(render_window* result, window_function start,window_function loop, window_function end, uint32_t window_width, uint32_t window_height,float target_framerate, std::string window_name)
 {
+	result->start = start;
 	result->loop = loop;
+	result->end = end;
+
 	result->target_framerate = target_framerate;
 
 	if (!glfw_context_open)
@@ -26,9 +29,19 @@ void render_window::create(render_window* result, window_main_loop loop, uint32_
 	input_manager::create(&result->input_manager_context, result);
 }
 
-void render_window::destroy(render_window* window)
+void render_window::create(render_window* result, window_function loop, uint32_t window_width, uint32_t window_height, float target_framerate, std::string window_name)
+{
+	create(result, nullptr, loop, nullptr, window_width, window_height, target_framerate, window_name);
+}
+
+void render_window::destroy(render_window* window, bool destroy_glfw_global)
 {
 	glfwDestroyWindow(window->raw_window);
+
+	if (destroy_glfw_global)
+	{
+		glfwTerminate();
+	}
 }
 
 void render_window::make_context_current(render_window* window)
@@ -46,6 +59,11 @@ void render_window::run(render_window* window, void* arguments)
 	make_context_current(window);
 
 	window->delta_time = 1;
+
+	if (window->start != nullptr)
+	{
+		window->start(window, arguments);
+	}
 
 	while (!should_window_close(window))
 	{
@@ -79,6 +97,11 @@ void render_window::run(render_window* window, void* arguments)
 			delta_time = 1;
 
 		window->delta_time = (float)delta_time;
+	}
+
+	if (window->end != nullptr)
+	{
+		window->end(window, arguments);
 	}
 }
 

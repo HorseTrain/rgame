@@ -3,6 +3,8 @@
 #ifndef STRING_TOOLS_H
 #define STRING_TOOLS_H
 
+#include "memory_tools.h"
+
 #include <string>
 #include <vector>
 
@@ -94,6 +96,38 @@ static bool string_contains(std::string* test, std::string check)
 	}
 
 	return false;
+}
+
+static void string_get_directory(std::string* result, std::string source)
+{
+	std::vector<std::string> string_parts;
+	string_replace(result, source, "\\", "/");
+	string_split(&string_parts, *result, '/');
+
+	std::string asset_path_tmp = "";
+
+	for (int i = 0; i < string_parts.size() - 1; ++i)
+	{
+		asset_path_tmp += string_parts[i] + "/";
+	}
+
+	*result = asset_path_tmp;
+}
+
+static bool is_sub_string(std::string* source, std::string test, int index)
+{
+	if (index + test.size() >= source->size())
+		return false;
+
+	return source->substr(index, test.size()) == test;
+}
+
+static bool is_sub_string(char* c_str, int c_str_size, std::string test, int index)
+{
+	if (index + test.size() >= c_str_size)
+		return false;
+
+	return std::string(c_str + index, test.size()) == test;
 }
 
 #endif

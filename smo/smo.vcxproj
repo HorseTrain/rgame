@@ -131,9 +131,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="asset\asset_instance.cpp" />
+    <ClCompile Include="actor\actor_mario.cpp" />
+    <ClCompile Include="asset\asset_collection.cpp" />
     <ClCompile Include="asset\model_importer.cpp" />
+    <ClCompile Include="asset\shader_loader.cpp" />
     <ClCompile Include="entry.cpp" />
+    <ClCompile Include="game\game_context.cpp" />
+    <ClCompile Include="game\game_scene.cpp" />
     <ClCompile Include="render\static_render_mesh.cpp" />
     <ClCompile Include="render\render_model.cpp" />
   </ItemGroup>
@@ -143,10 +147,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="asset\asset_instance.h" />
+    <ClInclude Include="actor\actor_mario.h" />
+    <ClInclude Include="asset\asset_collection.h" />
     <ClInclude Include="asset\model_importer.h" />
     <ClInclude Include="asset\r_asset_primative_type.h" />
-    <ClInclude Include="asset\shader_importer.h" />
+    <ClInclude Include="asset\shader_loader.h" />
+    <ClInclude Include="game\game_context.h" />
+    <ClInclude Include="game\game_scene.h" />
     <ClInclude Include="render\render_material.h" />
     <ClInclude Include="render\static_render_mesh.h" />
     <ClInclude Include="render\render_model.h" />

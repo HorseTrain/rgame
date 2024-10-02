@@ -1,5 +1,9 @@
 #include <iostream>
 
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
 #include "rgame/render_window.h"
 #include "rgame/render_shader.h"
 #include "rgame/io.h"
@@ -45,6 +49,8 @@ void loop(render_window* window, void* arguments)
 
 int main(int argc, char** argv)
 {
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	uint64_t* game_arguments[] = {
 		(uint64_t*)argv[0]
 	};

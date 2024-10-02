@@ -27,7 +27,19 @@
     <ClCompile Include="render\render_model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="asset\asset_instance.cpp">
+    <ClCompile Include="asset\asset_collection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="actor\actor_mario.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game\game_scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game\game_context.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="asset\shader_loader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,10 +68,19 @@
     <ClInclude Include="render\uniform_data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="asset\shader_importer.h">
+    <ClInclude Include="asset\shader_loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="asset\asset_instance.h">
+    <ClInclude Include="asset\asset_collection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="actor\actor_mario.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game\game_scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game\game_context.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
