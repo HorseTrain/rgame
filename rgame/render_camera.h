@@ -14,6 +14,7 @@ struct render_camera
 	float		z_far;
 
 	static		void create_empty(render_camera* result, float feild_of_view, float z_near, float z_far);
+	static		glm::mat4 get_raw_perspective(render_camera* camera, float window_aspect);
 	static		glm::mat4 get_view_matrix(render_camera* camera, float window_aspect);
 };
 

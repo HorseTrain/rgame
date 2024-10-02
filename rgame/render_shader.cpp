@@ -85,6 +85,14 @@ void render_shader::use(render_shader* program)
 	glUseProgram(program->handle);
 }
 
+void render_shader::uniform_mat4(render_shader* program, std::string name, glm::mat4 data)
+{
+	use(program);
+
+	int uniform_location = render_shader::get_uniform_location(program, name);
+	glUniformMatrix4fv(uniform_location, 1, false, (float*)&data);
+}
+
 int render_shader::get_uniform_location(render_shader* program, std::string name)
 {
 	if (program->handle == -1)

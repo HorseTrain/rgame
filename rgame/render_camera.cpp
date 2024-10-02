@@ -10,6 +10,11 @@ void render_camera::create_empty(render_camera* result, float feild_of_view, flo
 	transform::create_identity(&result->transform_context);
 }
 
+glm::mat4 render_camera::get_raw_perspective(render_camera* camera, float window_aspect)
+{
+	return glm::perspective(degrees_to_radians(camera->feild_of_view), window_aspect, camera->z_near, camera->z_far);
+}
+
 glm::mat4 render_camera::get_view_matrix(render_camera* camera, float window_aspect)
 {
 	if (std::isnan(window_aspect))

@@ -13,7 +13,7 @@ using System.Reflection;
 
 [assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("fd59130a-63cd-4863-8ae1-838e6eab72f0")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("rasset")]
-[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d983bf7407087651be02950495f79f5c1e0b9d70")]
 [assembly: System.Reflection.AssemblyProductAttribute("rasset")]

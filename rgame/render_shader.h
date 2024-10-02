@@ -7,6 +7,8 @@
 #include <string>
 #include <map>
 
+#include "glm/mat4x4.hpp"
+
 struct render_shader;
 
 struct render_shader_source
@@ -32,6 +34,7 @@ struct render_shader
 	static void					compile(render_shader* program);
 	static void					destroy(render_shader* program);
 	static void					use(render_shader* program);
+	static void					uniform_mat4(render_shader* program,std::string name, glm::mat4 data);
 	static int					get_uniform_location(render_shader* program, std::string name);
 } ;
 

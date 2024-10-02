@@ -5,6 +5,7 @@
 #include <assert.h>
 #include "rgame/render_window.h"
 #include "render/render_model.h"
+#include "rgame/io.h"
 
 template <typename T>
 void read_buffer(array_container<T>* result_location, r_asset_file* source)
@@ -75,4 +76,14 @@ void import_render_model_from_r_asset_file(render_model** result, asset_collecti
 	import_render_model_from_r_asset_file(result_model, source, name);
 
 	*result = result_model;
+}
+
+void import_render_model_from_path(render_model** result, asset_collection* asset_collection_context, std::string path, io* io_context, std::string name)
+{
+	r_asset_file asset_file;
+	r_asset_file::create_from_path(io_context, &asset_file, path);
+
+	import_render_model_from_r_asset_file(result, asset_collection_context, &asset_file, name);
+
+	r_asset_file::destroy(&asset_file);
 }

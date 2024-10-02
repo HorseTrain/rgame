@@ -35,10 +35,16 @@ int main(int argc, char** argv)
 
 	render_window::create(&main_window, game_start, game_loop, game_end, 500, 500, 60, "MARIO RAHH");
 
+	game_context_entry_command test_command;
+
+	test_command.command = GAME_ENTRY_INIT_LEVEL;
+	*(int*)test_command.argumens = -1;
+
 	void* arguments[] = {
 		(void*)argc,
 		argv,
-		&main_window
+		&main_window,
+		&test_command
 	};
 
 	render_window::run(&main_window, arguments);

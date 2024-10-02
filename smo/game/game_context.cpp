@@ -1,6 +1,7 @@
 #include "game_context.h"
 #include "asset/shader_loader.h"
 #include "render/render_model.h"
+#include "level/level_scene.h"
 
 #include "rgame/render_shader.h"
 #include "rgame/io.h"
@@ -41,25 +42,66 @@ void game_context::create(game_context* to_create, void** arguments)
 {
 	int entry_argument_count = (int)arguments[0];
 	char** entry_arguments = (char**)arguments[1];
+	to_create->render_window_context = (render_window*)arguments[2];
+	game_context_entry_command* entry_command = (game_context_entry_command*)arguments[3];
 
 	std::string asset_path = std::string(entry_arguments[0]);
-	
-	to_create->render_window_context = (render_window*)arguments[3];
 
 	init_game_context_io(to_create, asset_path);
 	init_game_assets(to_create);
+
+	input_manager::create(&to_create->input, to_create->render_window_context);
+
+	to_create->current_game = nullptr;
+
+	process_entry_command(to_create, entry_command);
 }
 
 void game_context::update(game_context* to_update)
 {
-	static_render_mesh* test_mesh = asset_collection::get_asset_by_name<static_render_mesh>(&to_update->game_assets,"debug_triangle");
-	render_shader* rest_shader = asset_collection::get_asset_by_name<render_shader>(&to_update->game_assets, "unskinned_actor");
+	input_manager::update(&to_update->input);
 
-	render_shader::use(rest_shader);
-	static_render_mesh::draw(test_mesh);
+	if (to_update->current_game != nullptr)
+	{
+		to_update->current_update_game(to_update);
+	}
 }
 
 void game_context::destroy(game_context* to_destroy)
 {
+	destroy_current_game_context(to_destroy);
+
 	asset_collection::destroy(&to_destroy->game_assets);
+}
+
+void game_context::process_entry_command(game_context* game_context_context, game_context_entry_command* entry_command)
+{
+	destroy_current_game_context(game_context_context);
+
+	switch (entry_command->command)
+	{
+	case GAME_ENTRY_INIT_LEVEL:
+	{
+		int level_id = *(int*)entry_command->argumens;
+
+		level_scene* working_scene = new level_scene();
+
+		level_scene::create(working_scene, game_context_context, level_id);
+
+		game_context_context->current_game = working_scene;
+
+		game_context_context->current_update_game = level_scene::update;
+		game_context_context->current_destroy_game = level_scene::destroy;
+		
+	}; break;
+	default: assert(false); throw 0;
+	}
+}
+
+void game_context::destroy_current_game_context(game_context* game_context_context)
+{
+	if (game_context_context->current_game == nullptr)
+		return;
+
+	game_context_context->current_destroy_game(game_context_context);
 }

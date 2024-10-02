@@ -42,6 +42,15 @@
     <ClCompile Include="asset\shader_loader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="level\level_scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="actor\actor_project_one.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="actor\actor_project_one.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="render\render_vertex.h">
@@ -81,6 +90,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="game\game_context.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="level\level_scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="actor\actor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
