@@ -58,7 +58,7 @@ void render_model::create_with_asset_collection(asset_collection* collection_con
 {
 	asset_instance* instance;
 
-	asset_collection::create_asset_instance(&instance, collection_context);
+	asset_collection::create_asset_instance(&instance, collection_context, nullptr, nullptr, name);
 
 	asset_instance::create(instance, create_render_model_with_asset_collection, destroy_render_model_with_asset_collection);
 

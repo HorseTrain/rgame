@@ -5,6 +5,8 @@
 
 #include "glm/detail/qualifier.hpp"
 
+#define M_PI 3.14159265359
+
 template <typename T>
 T degrees_to_radians(T source)
 {

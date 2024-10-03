@@ -131,12 +131,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="actor\actor_mario.cpp" />
-    <ClCompile Include="actor\actor_project_one.cpp" />
-    <ClCompile Include="actor\actor_project_one.h" />
+    <ClCompile Include="actor\debug_fp_player.cpp" />
+    <ClCompile Include="actor\floor_actor.cpp" />
+    <ClCompile Include="actor\spinning_mario_actor.cpp" />
     <ClCompile Include="asset\asset_collection.cpp" />
     <ClCompile Include="asset\model_importer.cpp" />
     <ClCompile Include="asset\shader_loader.cpp" />
+    <ClCompile Include="asset\texture_loader.cpp" />
     <ClCompile Include="entry.cpp" />
     <ClCompile Include="game\game_context.cpp" />
     <ClCompile Include="game\game_scene.cpp" />
@@ -151,11 +152,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="actor\actor.h" />
-    <ClInclude Include="actor\actor_mario.h" />
+    <ClInclude Include="actor\actor_ids.h" />
+    <ClInclude Include="actor\debug_fp_player.h" />
+    <ClInclude Include="actor\floor_actor.h" />
+    <ClInclude Include="actor\spinning_mario_actor.h" />
     <ClInclude Include="asset\asset_collection.h" />
     <ClInclude Include="asset\model_importer.h" />
     <ClInclude Include="asset\r_asset_primative_type.h" />
     <ClInclude Include="asset\shader_loader.h" />
+    <ClInclude Include="asset\texture_loader.h" />
     <ClInclude Include="game\game_context.h" />
     <ClInclude Include="game\game_scene.h" />
     <ClInclude Include="level\level_scene.h" />

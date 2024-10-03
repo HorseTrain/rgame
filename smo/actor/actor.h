@@ -18,6 +18,8 @@ struct actor
 	level_scene*				level_scene_context;
 	void*						actor_data;
 
+	int							actor_id;
+
 	bool						started;
 
 	actor_function				actor_create;

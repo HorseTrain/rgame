@@ -1,15 +1,60 @@
 #include "level_scene.h"
 #include "game/game_context.h"
 #include "actor/actor.h"
+#include "rgame/r_math.h"
 
-#include "actor/actor_mario.h"
+#include "actor/floor_actor.h"
+#include "asset/texture_loader.h"
+#include "actor/debug_fp_player.h"
+#include "actor/spinning_mario_actor.h"
 
 static void load_debug_scene(level_scene* level_scene_context)
 {
-	render_camera::create_empty(&level_scene_context->main_camera, 60, 1, 1000);
+	render_camera::create_empty(&level_scene_context->main_camera, 60, 0.5f, 1000);
 
+	load_texture("troll_face", "images/troll.jpg", &level_scene_context->asset_collection_context, &level_scene_context->game_context_context->io_context);
+	load_texture("troll_face_1", "images/troll_1.jpg", &level_scene_context->asset_collection_context, &level_scene_context->game_context_context->io_context);
+	load_texture("mario_body", "images/mario_body.png", &level_scene_context->asset_collection_context, &level_scene_context->game_context_context->io_context);
 
-	
+	floor_actor::create(level_scene_context, 100);
+
+	debug_fp_player_actor::create(level_scene_context);
+
+	for (int i = 0; i < 10; ++i)
+	{
+		float platform_size = 5;
+
+		floor_actor* floor = floor_actor::create(level_scene_context, platform_size);
+
+		floor->move = true;
+		floor->time = i * 0.5f;
+
+		floor->floor_transform.position = glm::vec3(i * (platform_size + 1), (i + 1) * 2, 0);
+	}
+
+	for (int i = 1; i < 10; ++i)
+	{
+		float platform_size = 5;
+
+		floor_actor* floor = floor_actor::create(level_scene_context, platform_size);
+
+		floor->move = true;
+		floor->time = -i * 0.5f;
+
+		floor->floor_transform.position = glm::vec3(-i * (platform_size + 1), (i + 1) * 2, 0);
+	}
+
+	int mario_count = 20;
+	float distance = (2 * M_PI) / mario_count;
+
+	for (int i = 0; i < mario_count; ++i)
+	{
+		spinning_mario_actor* mario = spinning_mario_actor::create(level_scene_context);
+
+		mario->mario_angle = i;
+
+		mario->_transform.position  = glm::vec3(sin(i* distance), 0, cos(i* distance)) * 20.0f;
+	}
 }
 
 void level_scene::create(level_scene* result, game_context* game_context_context, int level_id)
