@@ -8,6 +8,11 @@ static void register_key(input_manager* input_manager_context, int key)
 	(*key_data_ptr)[key] = { 0, 0 };
 }
 
+void input_manager::destroy(input_manager* input_manager_context)
+{
+
+}
+
 void input_manager::create(input_manager* result, render_window* window)
 {
 	result->window = window;

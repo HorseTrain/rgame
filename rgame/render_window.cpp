@@ -11,6 +11,8 @@ void render_window::create(render_window* result, window_function start,window_f
 	result->loop = loop;
 	result->end = end;
 
+	result->force_close = false;
+
 	result->target_framerate = target_framerate;
 
 	if (!glfw_context_open)
@@ -51,7 +53,7 @@ void render_window::make_context_current(render_window* window)
 
 bool render_window::should_window_close(render_window* window)
 {
-	return glfwWindowShouldClose(window->raw_window);
+	return glfwWindowShouldClose(window->raw_window) && !window->force_close;
 }
 
 void render_window::run(render_window* window, void* arguments)

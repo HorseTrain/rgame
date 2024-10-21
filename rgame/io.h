@@ -20,6 +20,7 @@ struct io
 	static void			fix_path(std::string* result, std::string source);
 	static bool			file_exists(std::string path);
 	static bool			file_exists(io* io_context,std::string path);
+	static void			destroy(io* io_context);
 };
 
 #endif

@@ -110,6 +110,11 @@ bool io::file_exists(std::string path)
 	return result;
 }
 
+void io::destroy(io* to_destroy)
+{
+	//
+}
+
 bool io::file_exists(io* io_context, std::string path)
 {
 	path = get_path(io_context, path);

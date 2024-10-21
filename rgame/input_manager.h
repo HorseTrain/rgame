@@ -23,6 +23,7 @@ struct input_manager
 	int							mouse_y;
 
 	static void create(input_manager* result, render_window* window);
+	static void destroy(input_manager* constext);
 	static void update(input_manager* input_manager_context);
 
 	static bool get_key_pressed(input_manager* input_manager_context, int key);

@@ -256,6 +256,12 @@ struct fast_array
 		result->data = arena_allocator::allocate_struct<T>(allocator, count);
 	}
 
+	static void create(fast_array<T>* result, int count)
+	{
+		result->count = count;
+		result->data = new T[count];
+	}
+
 	static void copy_from(fast_array* array, T* data)
 	{
 		//i hate this.

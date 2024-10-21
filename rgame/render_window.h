@@ -26,6 +26,8 @@ struct render_window
 	float			delta_time;
 	float			target_framerate;
 
+	bool			force_close;
+
 	input_manager	input_manager_context;
 
 	GLFWwindow*		raw_window;

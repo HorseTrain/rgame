@@ -18,76 +18,35 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="input_manager.cpp" />
-    <ClCompile Include="io.cpp" />
-    <ClCompile Include="lifetime_memory_manager.cpp" />
-    <ClCompile Include="lifetime_memory_manager.h" />
-    <ClCompile Include="mesh_renderer.cpp" />
-    <ClCompile Include="render_camera.cpp" />
-    <ClCompile Include="render_shader.cpp" />
-    <ClCompile Include="render_surface.cpp" />
-    <ClCompile Include="render_texture.cpp" />
-    <ClCompile Include="render_window.cpp" />
-    <ClCompile Include="r_asset.cpp" />
-    <ClCompile Include="shader_compiler.cpp" />
-    <ClCompile Include="transform.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="big_int.h" />
-    <ClInclude Include="GLFW\glfw3.h" />
-    <ClInclude Include="GLFW\glfw3native.h" />
-    <ClInclude Include="GL\eglew.h" />
-    <ClInclude Include="GL\glew.h" />
-    <ClInclude Include="GL\glxew.h" />
-    <ClInclude Include="GL\wglew.h" />
-    <ClInclude Include="input_manager.h" />
-    <ClInclude Include="io.h" />
-    <ClInclude Include="memory_tools.h" />
-    <ClInclude Include="mesh_renderer.h" />
-    <ClInclude Include="render_camera.h" />
-    <ClInclude Include="render_shader.h" />
-    <ClInclude Include="render_skeleton.h" />
-    <ClInclude Include="render_surface.h" />
-    <ClInclude Include="render_texture.h" />
-    <ClInclude Include="render_window.h" />
-    <ClInclude Include="rgame.h" />
-    <ClInclude Include="r_asset.h" />
-    <ClInclude Include="r_math.h" />
-    <ClInclude Include="shader_compiler.h" />
-    <ClInclude Include="stb_image.h" />
-    <ClInclude Include="string_tools.h" />
-    <ClInclude Include="transform.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{9894d405-4a69-40c3-898b-0871a1b3cf54}</ProjectGuid>
-    <RootNamespace>rgame</RootNamespace>
+    <ProjectGuid>{bb85c548-c10c-465e-9fbd-55c999c47158}</ProjectGuid>
+    <RootNamespace>mario</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -100,49 +59,31 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="shared_props.props" />
+    <Import Project="..\rgame\shared_props.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="shared_props.props" />
+    <Import Project="..\rgame\shared_props.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="shared_props.props" />
+    <Import Project="..\rgame\shared_props.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="shared_props.props" />
+    <Import Project="..\rgame\shared_props.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)..\Building\Output\$(ProjectName)\</OutDir>
-    <IntDir>$(SolutionDir)..\Building\Intermediate\$(ProjectName)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)..\Building\Output\$(ProjectName)\</OutDir>
-    <IntDir>$(SolutionDir)..\Building\Intermediate\$(ProjectName)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)..\Building\Output\$(ProjectName)\</OutDir>
-    <IntDir>$(SolutionDir)..\Building\Intermediate\$(ProjectName)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)..\Building\Output\$(ProjectName)\</OutDir>
-    <IntDir>$(SolutionDir)..\Building\Intermediate\$(ProjectName)\</IntDir>
-  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;$(SolutionDir)libs\glew32.lib;$(SolutionDir)libs\glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -153,15 +94,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
-      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;$(SolutionDir)libs\glew32.lib;$(SolutionDir)libs\glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -170,12 +108,10 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;$(SolutionDir)libs\glew32.lib;$(SolutionDir)libs\glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -186,17 +122,45 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
-      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;$(SolutionDir)libs\glew32.lib;$(SolutionDir)libs\glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\rgame\rgame.vcxproj">
+      <Project>{9894d405-4a69-40c3-898b-0871a1b3cf54}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="entry.cpp" />
+    <ClCompile Include="game.cpp" />
+    <ClCompile Include="game_command.cpp" />
+    <ClCompile Include="game_object.cpp" />
+    <ClCompile Include="asset_helper.cpp" />
+    <ClCompile Include="game_objects\camera.cpp" />
+    <ClCompile Include="game_objects\debug_renderer.cpp" />
+    <ClCompile Include="game_objects\static_terrain.cpp" />
+    <ClCompile Include="level.cpp" />
+    <ClCompile Include="render\static_render_mesh.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="asset_helper.h" />
+    <ClInclude Include="game_objects\camera.h" />
+    <ClInclude Include="game.h" />
+    <ClInclude Include="game_command.h" />
+    <ClInclude Include="game_object.h" />
+    <ClInclude Include="game_objects\debug_renderer.h" />
+    <ClInclude Include="game_objects\static_terrain.h" />
+    <ClInclude Include="level.h" />
+    <ClInclude Include="mario.h" />
+    <ClInclude Include="render\draw_data.h" />
+    <ClInclude Include="render\render_vertex.h" />
+    <ClInclude Include="render\static_render_mesh.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

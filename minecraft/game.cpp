@@ -1,4 +1,6 @@
 #include "game.h"
+#include "game.h"
+#include "game.h"
 #include "rgame/render_window.h"
 
 void game::create(game* game_context, render_window* render_window_context, std::string asset_path)
