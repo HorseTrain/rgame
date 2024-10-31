@@ -25,7 +25,7 @@ struct game
 	level*					level_context;
 
 	static void				send_command(game* game_context, game_command command);
-	static void				create(game* game_context, std::string executable_path);
+	static void				create(game* game_context, std::string executable_path, std::string window_name = "");
 	static void				run(game* game_context);
 	static void				destroy(game* game_context);
 	static void				destroy_current_level(game* game_context);

@@ -10,9 +10,11 @@
 
 struct level;
 struct game;
+struct render_window;
 
 struct game_object
 {
+	render_window*			render_window_context;
 	game*					game_context;
 	level*					level_context;
 	void*					game_object_data;

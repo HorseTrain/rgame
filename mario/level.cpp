@@ -63,6 +63,8 @@ void level::create(level* result, game* game_context)
 	result->game_context = game_context;
 	lifetime_memory_manager::create(&result->memory);
 
+	result->level_buffer = nullptr;
+
 	result->level_is_closing = false;
 }
 

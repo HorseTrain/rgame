@@ -4,6 +4,7 @@
 #define STATIC_RENDER_MESH_H
 
 #include "rgame/memory_tools.h"
+#include "rgame/render_window.h"
 #include "inttypes.h"
 #include "render_vertex.h"
 

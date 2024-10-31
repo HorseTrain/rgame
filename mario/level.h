@@ -17,13 +17,15 @@ struct level
 
 	game*								game_context;
 
+	void*								level_buffer;
+	void*								level_buffer_destroy;
+
 	std::mutex							game_object_accessor_lock;
 	std::unordered_set<game_object*>	active_game_objects;
 	std::unordered_set<game_object*>	game_object_creation_que;
 	std::unordered_set<game_object*>	game_object_destruction_que;
 
 	render_camera						working_camera;
-
 
 	bool								level_is_closing;
 

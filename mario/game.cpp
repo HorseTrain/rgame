@@ -65,10 +65,12 @@ static void game_end(render_window*, void* arguments)
 
 static void load_debug_level(game* game_context)
 {
-		
+	//TODO:
+
+	throw 0;
 }
 
-static void load_level(game* game_context, int level_index)
+static void load_level(game* game_context, uint64_t level_index, uint64_t level_destroy)
 {
 	if (level_index == -1)
 	{
@@ -76,8 +78,15 @@ static void load_level(game* game_context, int level_index)
 	}
 	else
 	{
-		assert(false);
-		throw 0;
+		void (*create_function)(void**, level*);
+
+		create_function = (void(*)(void**, level*))level_index;
+
+		game::create_empty_level(game_context);
+
+		create_function((void**)&game_context->level_context->level_buffer, game_context->level_context);
+
+		game_context->level_context->level_buffer_destroy = (void*)level_destroy;
 	}
 }
 
@@ -93,13 +102,13 @@ void game::send_command(game* game_context, game_command command)
 {
 	switch (command.command)
 	{
-	case game_load_level: load_level(game_context,command.arguments[0]); break;
+	case game_load_level: load_level(game_context,command.arguments[0], command.arguments[1]); break;
 	case game_close: game_context->window_context->force_close = true; break;
 	default: assert(false); throw 0;
 	}
 }
 
-void game::create(game* game_context, std::string executable_path)
+void game::create(game* game_context, std::string executable_path, std::string window_name)
 {
 	lifetime_memory_manager::create(&game_context->memory);
 
@@ -109,7 +118,7 @@ void game::create(game* game_context, std::string executable_path)
 
 	init_io(game_context, executable_path);
 
-	render_window::create(game_context->window_context, game_start, game_update, game_end, 500, 500, 60, "MARIO");
+	render_window::create(game_context->window_context, game_start, game_update, game_end, 500, 500, 60, window_name);
 	input_manager::create(game_context->input_manager_context, game_context->window_context);
 
 	game_context->level_context = nullptr;
@@ -133,11 +142,18 @@ void game::destroy(game* game_context)
 
 void game::destroy_current_level(game* game_context)
 {
-	if (game_context->level_context == nullptr)
+	level* level_context = game_context->level_context;
+
+	if (level_context == nullptr)
 		return;
 
-	level::destroy(game_context->level_context);
-	delete game_context->level_context;
+	if (level_context->level_buffer_destroy != nullptr)
+	{
+		((void(*)(void*))level_context->level_buffer_destroy)(level_context->level_buffer);
+	}
+
+	level::destroy(level_context);
+	delete level_context;
 
 	game_context->level_context = nullptr;
 }
@@ -147,5 +163,6 @@ void game::create_empty_level(game* game_context)
 	destroy_current_level(game_context);
 
 	game_context->level_context = new level();
+
 	level::create(game_context->level_context, game_context);
 }

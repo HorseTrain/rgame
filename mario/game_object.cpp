@@ -1,5 +1,6 @@
 #include "game_object.h"
 #include "mario.h"
+#include "rgame/render_window.h"
 
 void game_object::create(game_object** result, std::string name, level* level_context)
 {
@@ -12,6 +13,7 @@ void game_object::create(game_object** result, std::string name, level* level_co
 
 	game_object* result_object = lifetime_memory_manager::allocate<game_object>(&level_context->memory, name);
 
+	result_object->render_window_context = level_context->game_context->window_context;
 	result_object->level_context = level_context;
 	result_object->game_context = level_context->game_context;
 	result_object->name = name;

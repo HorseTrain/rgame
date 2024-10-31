@@ -14,9 +14,9 @@ enum game_command_header
 struct game_command
 {
 	game_command_header command;
-	std::vector<int>	arguments;
+	std::vector<uint64_t>	arguments;
 
-	static game_command create_command(game_command_header header, std::vector<int> arguments);
+	static game_command create_command(game_command_header header, std::vector<uint64_t> arguments);
 };
 
 #endif
