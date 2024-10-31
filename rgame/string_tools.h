@@ -130,38 +130,4 @@ static bool is_sub_string(char* c_str, int c_str_size, std::string test, int ind
 	return std::string(c_str + index, test.size()) == test;
 }
 
-static void fill_string_after(std::string* result, std::string source, char to_fill_with, int size)
-{
-	*result = source;
-
-	for (int i = source.size(); i < size; ++i)
-	{
-		*result += to_fill_with;
-	}
-}
-
-static void label_lines(std::string* result, std::string source)
-{
-	std::string working_result = "";
-
-	std::vector<std::string> lines;
-
-	string_split(&lines, source, '\n');
-
-	for (int i = 0; i < lines.size(); ++i)
-	{
-		std::string line = "";
-
-		fill_string_after(&line, std::to_string(i + 1), ' ', 3);
-
-		line += ": ";
-
-		line += lines[i];
-
-		working_result += line + "\n";
-	}
-
-	*result = working_result;
-}
-
 #endif

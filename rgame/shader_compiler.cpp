@@ -1,6 +1,9 @@
 #include "shader_compiler.h"
 #include "string_tools.h"
 #include "io.h"
+#include "render_shader.h"
+#include "rgame/render_window.h"
+
 #include <vector>
 
 #define ITL intrusive_linked_list<char>
@@ -121,6 +124,7 @@ void compile_shader_source(std::string* result, std::string path, io* io_context
 	char* result_buffer = (char*)malloc(count);
 
 	int idx = 0;
+
 	for (auto i = working_result->first; i != working_result->last; i = i->next)
 	{
 		if (i->data == 0)
@@ -136,4 +140,28 @@ void compile_shader_source(std::string* result, std::string path, io* io_context
 	free(result_buffer);
 
 	arena_allocator::destroy(&working_allocator);
+}
+
+static bool append_if_exists(render_shader* result, std::string path, int type, io* io_context)
+{
+	path = io::get_path(io_context, path);
+
+	if (io::file_exists(path))
+	{
+		std::string shader_source;
+
+		compile_shader_source(&shader_source, path, io_context);
+
+		render_shader::append_shader_source(result, type, shader_source);
+
+		return true;
+	}
+
+	return false;
+}
+
+void get_shader_from_path(render_shader* result, std::string path, io* io_context)
+{
+	append_if_exists(result, path + "/vertex.glsl", GL_VERTEX_SHADER, io_context);
+	append_if_exists(result, path + "/fragment.glsl", GL_FRAGMENT_SHADER, io_context);
 }

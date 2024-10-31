@@ -1,6 +1,7 @@
 #include "render_surface.h"
 #include "render_shader.h"
 #include "render_window.h"
+#include "rgame/render_texture.h"
 
 void render_surface::create_surface_data(render_surface* render_surface_context, render_surface_data_type type, std::string name)
 {
@@ -27,6 +28,8 @@ bool render_surface::surface_value_exists(render_surface* render_surface_context
 
 void render_surface::upload_surface_data(render_surface* render_surface_context, render_surface_data* data)
 {
+	render_shader::use(render_surface_context->working_shader);
+
 	int uniform_location = render_shader::get_uniform_location(render_surface_context->working_shader, data->name);
 
 	if (uniform_location == -1)
@@ -55,6 +58,8 @@ void render_surface::create(render_surface* render_surface_result, render_shader
 	render_surface_result->working_shader = working_shader;
 	render_surface_result->enable_depth = true;
 	render_surface_result->enable_backface_culling = true;
+
+	memset(render_surface_result->textures, 0, sizeof(render_surface::textures));
 }
 
 void render_surface::destroy(render_surface* render_surface_result)
@@ -73,14 +78,22 @@ void render_surface::use(render_surface* render_surface_context)
 
 	render_shader::use(render_surface_context->working_shader);
 
+	for (int i = 0; i < sizeof(render_surface::textures) / sizeof(render_texture*); ++i)
+	{
+		if (render_surface_context->textures[i] == nullptr)
+			continue;
+
+		render_texture::use(render_surface_context->textures[i], i);
+	}
+
 	if (render_surface_context->enable_depth)
 	{
-		glEnable(GL_DEPTH_BUFFER);
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	if (render_surface_context->enable_backface_culling)
 	{
-		glEnable(GL_CULL_FACE);
+		glDisable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 	}
 }

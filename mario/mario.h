@@ -8,6 +8,5 @@
 #include "game_object.h"
 #include "level.h"
 #include "asset_helper.h"
-#include "game_objects/camera.h"
 
 #include "render/static_render_mesh.h"

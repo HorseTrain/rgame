@@ -2,7 +2,6 @@
 
 #include "render_shader.h"
 #include "GL/glew.h"
-#include "rgame/string_tools.h"
 #include "assert.h"
 
 void render_shader::create(render_shader* result)
@@ -128,11 +127,6 @@ void render_shader_source::compile(render_shader_source* source)
 
 	if (size_buffer != 0)
 	{
-		std::string shader_lines = source->source;
-		label_lines(&shader_lines, shader_lines);
-
-		std::cout << shader_lines << std::endl;
-
 		std::cerr << error << std::endl;
 
 		assert(false); throw 0;

@@ -7,6 +7,7 @@
 #include <inttypes.h>
 #include <unordered_map>
 
+struct render_texture;
 struct render_shader;
 
 enum render_surface_data_type
@@ -38,6 +39,7 @@ struct render_surface_data
 struct render_surface
 {
 	std::unordered_map<std::string, render_surface_data>	surface_data;
+	render_texture*											textures[32];
 
 	render_shader*											working_shader;
 	bool													enable_depth;

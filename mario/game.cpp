@@ -2,17 +2,17 @@
 
 #include "mario.h"
 
-#include "game_objects/camera.h"
-#include "game_objects/debug_renderer.h"
-#include "game_objects/static_terrain.h"
 #include "rgame/shader_compiler.h"
+
+#include "render/model_loader.h"
+#include "rgame/render_texture.h"
 
 static void init_debug_assets(game* game_context)
 {
 	static_render_mesh* debug_mesh;
 
 	debug_mesh = lifetime_memory_manager::allocate<static_render_mesh>(&game_context->memory, "debug_triangle");
-	static_render_mesh::create_debug_triangle(debug_mesh);
+	static_render_mesh::create_debug_cube(debug_mesh, 1);
 
 	debug_mesh = lifetime_memory_manager::allocate<static_render_mesh>(&game_context->memory, "debug_plane");
 	static_render_mesh::create_debug_plane(debug_mesh, 100);
@@ -65,27 +65,7 @@ static void game_end(render_window*, void* arguments)
 
 static void load_debug_level(game* game_context)
 {
-	game::create_empty_level(game_context);
-
-	level* working_level = game_context->level_context;
-
-	camera* camera;
-	camera::create(&camera, working_level, &working_level->working_camera, glm::vec3(0), 60, 1, 100);
-
-	/*
-
-	*/
-
-	for (int i = 0; i < 10; ++i)
-	{
-		debug_renderer* renderer;
-		debug_renderer::create(&renderer, working_level, camera);
-
-		renderer->object_transform.position = glm::vec3(i, 0, 0);
-	}
-
-	static_terrain* terrain;
-	static_terrain::create(&terrain, working_level);
+		
 }
 
 static void load_level(game* game_context, int level_index)

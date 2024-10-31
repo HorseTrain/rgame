@@ -6,5 +6,5 @@ out vec4 fragmentColor;
 
 void main()
 {
-    fragmentColor = vec4(1, 0, 0, 1);
+    fragmentColor = texture(texture_0, uv_0 * texture_0_scale);
 }

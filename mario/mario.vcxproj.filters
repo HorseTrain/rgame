@@ -30,16 +30,7 @@
     <ClCompile Include="level.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="game_objects\camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="render\static_render_mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game_objects\debug_renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game_objects\static_terrain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="asset_helper.cpp">
@@ -62,25 +53,19 @@
     <ClInclude Include="mario.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="game_objects\camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="render\render_vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="render\static_render_mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="game_objects\debug_renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game_objects\static_terrain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="asset_helper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="render\draw_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="render\model_loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
