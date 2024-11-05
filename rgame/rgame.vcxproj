@@ -52,6 +52,7 @@
     <ClInclude Include="render_texture.h" />
     <ClInclude Include="render_window.h" />
     <ClInclude Include="rgame.h" />
+    <ClInclude Include="pixel.h" />
     <ClInclude Include="r_asset.h" />
     <ClInclude Include="r_math.h" />
     <ClInclude Include="shader_compiler.h" />

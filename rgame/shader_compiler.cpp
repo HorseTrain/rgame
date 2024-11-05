@@ -164,4 +164,5 @@ void get_shader_from_path(render_shader* result, std::string path, io* io_contex
 {
 	append_if_exists(result, path + "/vertex.glsl", GL_VERTEX_SHADER, io_context);
 	append_if_exists(result, path + "/fragment.glsl", GL_FRAGMENT_SHADER, io_context);
+	append_if_exists(result, path + "/geomatry.glsl", GL_GEOMETRY_SHADER, io_context);
 }

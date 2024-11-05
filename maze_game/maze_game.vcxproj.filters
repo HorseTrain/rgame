@@ -32,5 +32,8 @@
     <ClInclude Include="maze.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="maze_cell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

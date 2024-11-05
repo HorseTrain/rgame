@@ -15,10 +15,9 @@ static void vertex_attrib_i_pointer(int index, int count, int type, int offset)
 
 static void negate_buffers(static_render_mesh* static_render_mesh_context)
 {
-	for (int i = 0; i < sizeof(static_render_mesh::gl_handles) / sizeof(int); ++i)
-	{
-		static_render_mesh_context->gl_handles[i] = -1;
-	}
+	static_render_mesh_context->gl_handles[0] = -1;
+	static_render_mesh_context->gl_handles[1] = -1;
+	static_render_mesh_context->gl_handles[2] = -1;
 }
 
 void static_render_mesh::upload(static_render_mesh* static_render_mesh_context)
@@ -75,7 +74,7 @@ bool static_render_mesh::is_uploaded(static_render_mesh* static_render_mesh_cont
 {
 	bool current_result = static_render_mesh_context->gl_handles[0] != -1;
 
-	for (int i = 0; i < sizeof(static_render_mesh::gl_handles) / sizeof(int); ++i)
+	for (int i = 0; i < sizeof(static_render_mesh::gl_handles) / sizeof(uint32_t); ++i)
 	{
 		if ((static_render_mesh_context->gl_handles[i] == -1 && current_result) || (static_render_mesh_context->gl_handles[i] != -1 && !current_result))
 		{

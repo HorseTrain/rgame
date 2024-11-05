@@ -50,6 +50,16 @@ struct game_object
 		return result;
 	}
 
+	template	<typename T>
+	static T*	create_game_object(level* level_context, std::string name = "")
+	{
+		game_object* result_object;
+
+		create(&result_object, name, level_context);
+
+		return allocate_game_object_data<T>(result_object);
+	}
+
 	static void create(game_object** result, std::string name, level* level_context);
 
 	static void start(game_object* game_object_context);

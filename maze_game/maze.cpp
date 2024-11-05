@@ -1,6 +1,12 @@
 #include "maze.h"
 #include "maze_level.h"
 #include "mario/render/static_render_mesh.h"
+#include "rgame/render_texture.h"
+#include "rgame/pixel.h"
+#include "mario/asset_helper.h"
+#include "rgame/lifetime_memory_manager.h"
+#include "mario/game_object.h"
+#include "mario/game.h"
 
 static render_vertex from_position(float x, float y, float z)
 {
@@ -11,53 +17,100 @@ static render_vertex from_position(float x, float y, float z)
 	return result;
 }
 
-void maze::create(maze** maze_context, maze_level* maze_level_context)
+void maze::create(maze* result, maze_level* maze_level_context)
 {
-	maze* result = new maze;
-
 	result->maze_level_context = maze_level_context;
-	result->mesh_context = nullptr;
 
-	*maze_context = result;
+	result->cells = nullptr;
+
+	result->cell_width = -1;
+	result->cell_height = -1;
+
+	lifetime_memory_manager* game_memory = &result->game_object_context->game_context->memory;
+	render_surface* working_render_surface = lifetime_memory_manager::get_allocation<render_surface>(game_memory, "debug_texture_surface");
+
+	create_render_surface_copy(&result->debug_texture_surface, working_render_surface, game_memory);
 }
 
 void maze::destroy(maze* maze_context)
 {
-	delete maze_context;
+	maze::destroy_current_maze(maze_context);
 }
 
-static void destroy_current_mesh(static_render_mesh* static_render_mesh_context)
+void maze::destroy_current_maze(maze* maze_context)
 {
-	if (static_render_mesh_context == nullptr)
+	if (maze_context->cells == nullptr)
 		return;
 
-	static_render_mesh::destroy(static_render_mesh_context);
+	delete maze_context->cells;
 
-	delete static_render_mesh_context;
+	maze_context->cell_width = -1;
+	maze_context->cell_height = -1;
 }
 
-void maze::create_debug_triangle(maze* maze_context)
+void maze::generate_maze(maze* maze_context, int width, int height)
 {
-	destroy_current_mesh(maze_context->mesh_context);
+	destroy_current_maze(maze_context);
 
-	static_render_mesh* result = new static_render_mesh;
+	maze_context->cell_width = width;
+	maze_context->cell_height = height;
 
-	std::vector<render_vertex> vertices = {
+	int maze_cell_count = width * height;
 
-		from_position(0, 0, 0),
-		from_position(1, 0, 0),
-		from_position(1, 1, 0)
+	maze_cell* new_cells = new maze_cell[maze_cell_count];
 
-	};
+	for (int i = 0; i < maze_cell_count; ++i)
+	{
+		new_cells[i] = { maze_context, {true, true, true, true} };
+	}
 
-	std::vector<uint16_t> indices = {
-		0, 1, 2
-	};
+	maze_context->cells = new_cells;
+}
 
-	static_render_mesh::create(maze_context->mesh_context, 3, 3, GL_TRIANGLES);
 
-	fast_array< uint16_t>::copy_from(&result->indecies, indices.data());
-	fast_array< render_vertex>::copy_from(&result->vertices, vertices.data());
+void maze::generate_maze_texture(render_texture** render_texture_context, maze* maze_context)
+{
+	render_texture* result = new render_texture;
 
-	maze_context->mesh_context = result;
-};
+	render_texture::create_empty(result, maze_context->cell_width, maze_context->cell_height,sizeof(rgba_i8));
+
+	*render_texture_context = result;
+}
+
+void maze::render_debug_texture(maze* maze_context)
+{
+	render_texture* working_texture;
+
+	render_surface* working_surface = maze_context->debug_texture_surface;
+
+	generate_maze_texture(&working_texture, maze_context);
+
+	working_surface->textures[0] = working_texture;
+
+	render_surface::use(working_surface);
+
+	static_render_mesh* triangle = new static_render_mesh();
+
+	static_render_mesh::create_debug_triangle(triangle);
+
+	static_render_mesh::bind(triangle);
+	static_render_mesh::generic_draw(triangle);
+
+	static_render_mesh::destroy(triangle);
+
+
+	delete triangle;
+
+	render_texture::destroy(working_texture);
+	delete working_texture;
+}
+
+void maze::start(maze* maze_context)
+{
+	maze::generate_maze(maze_context, 10, 10);
+}
+
+void maze::update(maze* maze_context)
+{
+	render_debug_texture(maze_context);
+}

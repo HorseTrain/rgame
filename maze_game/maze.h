@@ -3,18 +3,38 @@
 #ifndef MAZE_H
 #define MAZE_H
 
+#include "maze_cell.h"
+#include "rgame/pixel.h"
+
 struct static_render_mesh;
 struct maze_level;
+struct render_texture;
+struct game_object;
+struct render_surface;
 
 struct maze
 {
-	static_render_mesh* mesh_context;
 	maze_level*			maze_level_context;
 
-	static void			create(maze** maze_context, maze_level* maze_level_context);
-	static void			destroy(maze* maze_context);
+	game_object*		game_object_context;
+	render_surface*		debug_texture_surface;
 
-	static void			create_debug_triangle(maze* maze_context);
+	maze_cell*			cells;
+	int					cell_width;
+	int					cell_height;
+
+	static void			create(maze* result, maze_level* maze_level_context);
+	
+	static void			destroy_current_maze(maze* maze_context);
+	static void			generate_maze(maze* maze_context, int width, int height);
+
+	static void			generate_maze_texture(render_texture** result, maze* maze_context);
+
+	static void			render_debug_texture(maze* maze_context);
+
+	static void			start(maze* game_object_context);
+	static void			update(maze* game_object_context);
+	static void			destroy(maze* maze_context);
 };
 
 #endif

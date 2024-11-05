@@ -16,6 +16,7 @@ struct static_render_mesh
 	fast_array<render_vertex>	vertices;
 
 	uint32_t					gl_handles[3];
+	uint32_t					padding;
 
 	static void					upload(static_render_mesh* static_render_mesh_context);
 	static void					unload(static_render_mesh* static_render_mesh_context);

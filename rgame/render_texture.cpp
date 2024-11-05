@@ -10,6 +10,20 @@ void render_texture::create(render_texture* result)
 	result->gl_handle = -1;
 }
 
+void render_texture::create_empty(render_texture* result, int width, int height, int pixel_size)
+{
+	create(result);
+
+	result->width = width;
+	result->height = height;
+
+	int texture_buffer_size = width * height * pixel_size;
+
+	result->texture_buffer = malloc(texture_buffer_size);
+
+	memset(result->texture_buffer, 0, texture_buffer_size);
+}
+
 void render_texture::destroy(render_texture* render_texture_context)
 {
 	if (render_texture_context->texture_buffer != nullptr)
