@@ -3,8 +3,9 @@
 #ifndef MAZE_H
 #define MAZE_H
 
-#include "maze_cell.h"
+#include "maze_data.h"
 #include "rgame/pixel.h"
+#include <vector>
 
 struct static_render_mesh;
 struct maze_level;
@@ -14,14 +15,16 @@ struct render_surface;
 
 struct maze
 {
-	maze_level*			maze_level_context;
+	maze_level*				maze_level_context;
 
-	game_object*		game_object_context;
-	render_surface*		debug_texture_surface;
+	game_object*			game_object_context;
+	render_surface*			debug_texture_surface;
 
-	maze_cell*			cells;
-	int					cell_width;
-	int					cell_height;
+	maze_cell*				cells;
+	std::vector<maze_wall*>	walls;
+
+	int						cell_width;
+	int						cell_height;
 
 	static void			create(maze* result, maze_level* maze_level_context);
 	

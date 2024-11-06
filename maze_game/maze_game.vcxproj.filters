@@ -32,7 +32,7 @@
     <ClInclude Include="maze.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="maze_cell.h">
+    <ClInclude Include="maze_data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

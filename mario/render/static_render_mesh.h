@@ -25,6 +25,7 @@ struct static_render_mesh
 	static void					create(static_render_mesh* result, int index_count, int vertex_count, int primative_type);
 	static void					destroy(static_render_mesh* static_render_mesh_context);
 	static void					create_debug_triangle(static_render_mesh* result);
+	static void					create_debug_quad(static_render_mesh* result);
 	static void					create_debug_plane(static_render_mesh* result, float size);
 	static void					create_debug_cube(static_render_mesh* result, float size);
 	static void					generic_draw(static_render_mesh* result);

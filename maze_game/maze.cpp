@@ -67,12 +67,21 @@ void maze::generate_maze(maze* maze_context, int width, int height)
 	maze_context->cells = new_cells;
 }
 
+static int create_multiplier(int source, int square_size)
+{
+	return (source * square_size) + source + 1;
+}
 
 void maze::generate_maze_texture(render_texture** render_texture_context, maze* maze_context)
 {
 	render_texture* result = new render_texture;
 
-	render_texture::create_empty(result, maze_context->cell_width, maze_context->cell_height,sizeof(rgba_i8));
+	render_texture::create_empty(
+		result, 
+		create_multiplier(maze_context->cell_width, 10), 
+		create_multiplier(maze_context->cell_height, 10),
+		sizeof(rgba_i8)
+	);
 
 	*render_texture_context = result;
 }
@@ -91,7 +100,7 @@ void maze::render_debug_texture(maze* maze_context)
 
 	static_render_mesh* triangle = new static_render_mesh();
 
-	static_render_mesh::create_debug_triangle(triangle);
+	static_render_mesh::create_debug_quad(triangle);
 
 	static_render_mesh::bind(triangle);
 	static_render_mesh::generic_draw(triangle);
@@ -107,7 +116,7 @@ void maze::render_debug_texture(maze* maze_context)
 
 void maze::start(maze* maze_context)
 {
-	maze::generate_maze(maze_context, 10, 10);
+	maze::generate_maze(maze_context, 100, 100);
 }
 
 void maze::update(maze* maze_context)

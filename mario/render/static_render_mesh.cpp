@@ -129,6 +129,26 @@ void static_render_mesh::create_debug_triangle(static_render_mesh* result)
 	result->indecies[2] = 2;
 }
 
+void static_render_mesh::create_debug_quad(static_render_mesh* result)
+{
+	static_render_mesh::create(result, 4, 4, GL_QUADS);
+
+	result->vertices[0].position = glm::vec3(0, 0, 0);
+	result->vertices[1].position = glm::vec3(1, 0, 0);
+	result->vertices[2].position = glm::vec3(1, 1, 0);
+	result->vertices[3].position = glm::vec3(0, 1, 0);
+
+	for (int i = 0; i < 4; ++i)
+	{
+		result->vertices[i].uv_0 = glm::vec2(result->vertices[i].position.x, result->vertices[i].position.y);
+	}
+
+	result->indecies[0] = 0;
+	result->indecies[1] = 1;
+	result->indecies[2] = 2;
+	result->indecies[3] = 3;
+}
+
 void static_render_mesh::create_debug_plane(static_render_mesh* result, float size)
 {
 	static_render_mesh::create(result, 4, 4, GL_QUADS);
