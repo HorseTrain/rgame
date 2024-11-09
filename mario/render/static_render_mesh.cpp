@@ -135,13 +135,13 @@ void static_render_mesh::create_debug_quad(static_render_mesh* result)
 
 	result->vertices[0].position = glm::vec3(0, 0, 0);
 	result->vertices[1].position = glm::vec3(1, 0, 0);
-	result->vertices[2].position = glm::vec3(1, 1, 0);
-	result->vertices[3].position = glm::vec3(0, 1, 0);
+	result->vertices[2].position = glm::vec3(1, 0, 1);
+	result->vertices[3].position = glm::vec3(0, 0, 1);
 
-	for (int i = 0; i < 4; ++i)
-	{
-		result->vertices[i].uv_0 = glm::vec2(result->vertices[i].position.x, result->vertices[i].position.y);
-	}
+	result->vertices[0].uv_0 = glm::vec2(0, 0);
+	result->vertices[1].uv_0 = glm::vec2(1, 0);
+	result->vertices[2].uv_0 = glm::vec2(1, 1);
+	result->vertices[3].uv_0 = glm::vec2(0, 1);
 
 	result->indecies[0] = 0;
 	result->indecies[1] = 1;

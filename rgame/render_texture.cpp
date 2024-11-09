@@ -42,7 +42,7 @@ void render_texture::create_empty(render_texture* result, int width, int height,
 
 	for (int i = 0; i < texture_buffer_size; ++i)
 	{
-		*(uint8_t*)((char*)result->texture_buffer + i) = rand();
+		*(uint8_t*)((char*)result->texture_buffer + i) = 255;
 	}
 }
 

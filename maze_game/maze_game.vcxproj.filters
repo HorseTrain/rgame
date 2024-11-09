@@ -24,6 +24,12 @@
     <ClCompile Include="maze.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="maze_data.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="maze_generator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="maze_level.h">
@@ -33,6 +39,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="maze_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="maze_generator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="randomized_depth_first_search.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

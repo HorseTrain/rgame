@@ -137,6 +137,8 @@
   <ItemGroup>
     <ClCompile Include="entry.cpp" />
     <ClCompile Include="maze.cpp" />
+    <ClCompile Include="maze_data.cpp" />
+    <ClCompile Include="maze_generator.cpp" />
     <ClCompile Include="maze_level.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -148,8 +150,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="randomized_depth_first_search.h" />
     <ClInclude Include="maze.h" />
     <ClInclude Include="maze_data.h" />
+    <ClInclude Include="maze_generator.h" />
     <ClInclude Include="maze_level.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

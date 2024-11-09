@@ -7,6 +7,7 @@
 #include "rgame/lifetime_memory_manager.h"
 #include "mario/game_object.h"
 #include "mario/game.h"
+#include "maze_generator.h"
 
 static render_vertex from_position(float x, float y, float z)
 {
@@ -44,6 +45,13 @@ void maze::destroy_current_maze(maze* maze_context)
 
 	delete maze_context->cells;
 
+	for (auto i : maze_context->walls)
+	{
+		delete i.second;
+	}
+
+	maze_context->walls.clear();
+
 	maze_context->cell_width = -1;
 	maze_context->cell_height = -1;
 }
@@ -59,12 +67,60 @@ void maze::generate_maze(maze* maze_context, int width, int height)
 
 	maze_cell* new_cells = new maze_cell[maze_cell_count];
 
-	for (int i = 0; i < maze_cell_count; ++i)
-	{
-		new_cells[i] = { maze_context, {true, true, true, true} };
-	}
+	memset(new_cells, 0, sizeof(maze_cell) * maze_cell_count);
 
 	maze_context->cells = new_cells;
+
+	for (int i = 0; i < maze_cell_count; ++i)
+	{
+		new_cells[i].maze_context = maze_context;
+	}
+
+	for (int x = 0; x < width; ++x)
+	{
+		for (int y = 0; y < height; ++y)
+		{
+			maze_cell* working_cell = maze::get_cell(maze_context, x, y);
+
+			working_cell->x = x;
+			working_cell->y = y;
+
+			maze_cell::find_neighbors(working_cell);
+		}
+	}
+
+	for (int x = 0; x < width; ++x)
+	{
+		for (int y = 0; y < height; ++y)
+		{
+			wall_key keys[] = { {x, y, EAST_WEST} , {x + 1, y, NORTH_SOUTH}, { x, y + 1, EAST_WEST }, { x, y, NORTH_SOUTH } };
+
+			maze_cell* working_cell = maze::get_cell(maze_context, x, y);
+
+			for (int i = 0; i < 4; ++i)
+			{
+				wall_key working_key = keys[i];
+
+				if (maze_context->walls.find(working_key) != maze_context->walls.end())
+				{
+					working_cell->walls[i] = maze_context->walls[working_key];
+
+					continue;
+				}
+
+				maze_wall* new_wall = new maze_wall();
+
+				working_cell->walls[i] = new_wall;
+
+				maze_context->walls[working_key] = new_wall;
+			}
+		}
+	}
+
+	maze_generator maze_generator_context;
+
+	maze_generator::create(&maze_generator_context, maze_context);
+	maze_generator::generate_randomizd_depth_first_search(&maze_generator_context);
 }
 
 static int create_multiplier(int source, int square_size)
@@ -72,51 +128,98 @@ static int create_multiplier(int source, int square_size)
 	return (source * square_size) + source + 1;
 }
 
+static void draw_line(render_texture* texture, int x, int y, int length,bool is_x_axis, rgba_i8 color)
+{
+	for (int i = 0; i < length; ++i)
+	{
+		if (is_x_axis)
+		{
+			x++;
+		}
+		else
+		{
+			y++;
+		}
+
+		*rgba_i8::get_pixel((rgba_i8*)texture->texture_buffer, x, y, texture->width) = color;
+	}
+}
+
+static void draw_line(render_texture* texture, glm::vec2 p0, glm::vec2 p1, rgba_i8 color)
+{
+	glm::vec2 direction = p1 - p0;
+	float length = glm::length(direction);
+	direction /= length;
+
+	glm::vec2 current = p0;
+
+	for (int i = 0; i < length; ++i)
+	{
+		current += direction;
+
+		int x = (int)current.x;
+		int y = (int)current.y;
+
+		*rgba_i8::get_pixel((rgba_i8*)texture->texture_buffer, x, y, texture->width) = color;
+	}
+}
+
 void maze::generate_maze_texture(render_texture** render_texture_context, maze* maze_context)
 {
 	render_texture* result = new render_texture;
 
+	int maze_width = maze_context->cell_width;
+	int maze_height = maze_context->cell_height;
+
 	render_texture::create_empty(
 		result, 
-		create_multiplier(maze_context->cell_width, 10), 
-		create_multiplier(maze_context->cell_height, 10),
+		create_multiplier(maze_width, CELL_SIZE),
+		create_multiplier(maze_height, CELL_SIZE),
 		sizeof(rgba_i8)
 	);
+
+	for (auto i : maze_context->walls)
+	{
+		wall_key key = i.first;
+		maze_wall* working_wall = i.second;
+
+		if (working_wall->is_open)
+			continue;
+
+		int px = key.base_x * (CELL_SIZE + 1);
+		int py = key.base_y * (CELL_SIZE + 1);
+
+		draw_line(result, px, py, CELL_SIZE, key.direction == EAST_WEST, {0, 0, 0, 0});
+	}
+
+	for (int i = 0; i < maze_context->solution.size() - 1; ++i)
+	{
+		draw_line(result, maze_context->solution[i], maze_context->solution[i + 1], { 255, 0, 0, 255});
+	}
 
 	*render_texture_context = result;
 }
 
 void maze::render_debug_texture(maze* maze_context)
 {
-	render_texture* working_texture;
+	//
+}
 
-	render_surface* working_surface = maze_context->debug_texture_surface;
+maze_cell* maze::get_cell(maze* maze_context, int x, int y)
+{
+	if (x >= maze_context->cell_width || y >= maze_context->cell_height ||
+		x < 0 || 
+		y < 0)
+	{
+		return nullptr;
+	}
 
-	generate_maze_texture(&working_texture, maze_context);
-
-	working_surface->textures[0] = working_texture;
-
-	render_surface::use(working_surface);
-
-	static_render_mesh* triangle = new static_render_mesh();
-
-	static_render_mesh::create_debug_quad(triangle);
-
-	static_render_mesh::bind(triangle);
-	static_render_mesh::generic_draw(triangle);
-
-	static_render_mesh::destroy(triangle);
-
-
-	delete triangle;
-
-	render_texture::destroy(working_texture);
-	delete working_texture;
+	return maze_context->cells + (y * maze_context->cell_width) + x;
 }
 
 void maze::start(maze* maze_context)
 {
-	maze::generate_maze(maze_context, 100, 100);
+	maze::generate_maze(maze_context, 50, 50);
 }
 
 void maze::update(maze* maze_context)
