@@ -23,6 +23,7 @@ void maze::create(maze* result, maze_level* maze_level_context)
 	result->maze_level_context = maze_level_context;
 
 	result->cells = nullptr;
+	result->maze_mesh = nullptr;
 
 	result->cell_width = -1;
 	result->cell_height = -1;
@@ -200,6 +201,27 @@ void maze::generate_maze_texture(render_texture** render_texture_context, maze* 
 	*render_texture_context = result;
 }
 
+void maze::generate_maze_mesh(maze* maze_context)
+{
+	if (maze_context->maze_mesh != nullptr)
+	{
+		static_render_mesh::destroy(maze_context->maze_mesh);
+
+		delete maze_context->maze_mesh;
+	}
+
+	maze_context->maze_mesh = new static_render_mesh;
+
+	for (auto i : maze_context->walls)
+	{
+		wall_key key = i.first;
+		maze_wall* working_wall = i.second;
+
+		if (working_wall->is_open)
+			continue;
+	}
+}
+
 void maze::render_debug_texture(maze* maze_context)
 {
 	//
@@ -219,10 +241,11 @@ maze_cell* maze::get_cell(maze* maze_context, int x, int y)
 
 void maze::start(maze* maze_context)
 {
-	maze::generate_maze(maze_context, 50, 50);
+	maze::generate_maze(maze_context, 100, 100);
+	maze::generate_maze_mesh(maze_context);
 }
 
 void maze::update(maze* maze_context)
 {
-	render_debug_texture(maze_context);
+
 }

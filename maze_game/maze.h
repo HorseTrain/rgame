@@ -28,6 +28,8 @@ struct maze
 	std::unordered_map<wall_key,maze_wall*>	walls;
 	std::vector<glm::vec2>					solution;
 
+	static_render_mesh*						maze_mesh;
+
 	int										cell_width;
 	int										cell_height;
 
@@ -37,6 +39,7 @@ struct maze
 	static void								generate_maze(maze* maze_context, int width, int height);
 
 	static void								generate_maze_texture(render_texture** result, maze* maze_context);
+	static void								generate_maze_mesh(maze* maze_context);
 
 	static void								render_debug_texture(maze* maze_context);
 
