@@ -193,18 +193,6 @@ void static_render_mesh::create_debug_cube(static_render_mesh* result, float siz
 	result->indecies[5] = 3;
 	result->indecies[6] = 7;
 	result->indecies[7] = 6;
-
-	/*
-	result->indecies[8] = 1;
-	result->indecies[9] = 3;
-	result->indecies[10] = 7;
-	result->indecies[11] = 5;
-
-	result->indecies[12] = 0;
-	result->indecies[13] = 2;
-	result->indecies[14] = 6;
-	result->indecies[15] = 4;
-	*/
 }
 
 void static_render_mesh::generic_draw(static_render_mesh* result)

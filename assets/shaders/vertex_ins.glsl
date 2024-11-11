@@ -3,6 +3,7 @@ layout (location = 1) in vec2 i_uv_1;
 layout (location = 2) in vec2 i_uv_2;
 
 layout (location = 3) in vec3 i_position;
+
 layout (location = 4) in vec3 i_normal;
 layout (location = 5) in vec3 i_tangent;
 layout (location = 6) in vec3 i_bi_tangnet;

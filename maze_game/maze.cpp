@@ -18,6 +18,16 @@ static render_vertex from_position(float x, float y, float z)
 	return result;
 }
 
+static void destroy_current_maze_mesh(maze* maze_context)
+{
+	if (maze_context->maze_mesh != nullptr)
+	{
+		static_render_mesh::destroy(maze_context->maze_mesh);
+
+		delete maze_context->maze_mesh;
+	}
+}
+
 void maze::create(maze* result, maze_level* maze_level_context)
 {
 	result->maze_level_context = maze_level_context;
@@ -41,6 +51,8 @@ void maze::destroy(maze* maze_context)
 
 void maze::destroy_current_maze(maze* maze_context)
 {
+	destroy_current_maze_mesh(maze_context);
+
 	if (maze_context->cells == nullptr)
 		return;
 
@@ -203,12 +215,7 @@ void maze::generate_maze_texture(render_texture** render_texture_context, maze* 
 
 void maze::generate_maze_mesh(maze* maze_context)
 {
-	if (maze_context->maze_mesh != nullptr)
-	{
-		static_render_mesh::destroy(maze_context->maze_mesh);
-
-		delete maze_context->maze_mesh;
-	}
+	destroy_current_maze_mesh(maze_context);
 
 	maze_context->maze_mesh = new static_render_mesh;
 
@@ -220,6 +227,8 @@ void maze::generate_maze_mesh(maze* maze_context)
 		if (working_wall->is_open)
 			continue;
 	}
+
+	static_render_mesh::create_debug_triangle(maze_context->maze_mesh);
 }
 
 void maze::render_debug_texture(maze* maze_context)
@@ -247,5 +256,22 @@ void maze::start(maze* maze_context)
 
 void maze::update(maze* maze_context)
 {
+	render_camera* working_camera = &maze_context->maze_level_context->level_context->working_camera;
+	render_window* working_window = maze_context->game_object_context->game_context->window_context;
+	render_surface* working_surface = lifetime_memory_manager::get_allocation<render_surface>(&maze_context->game_object_context->game_context->memory, "debug_surface_surface");
 
+	float aspect = render_window::get_aspect_ratio(working_window);
+
+	if (maze_context->maze_mesh == nullptr)
+		return;
+
+	render_surface::set_data(working_surface, "object_transform", glm::mat4(1), render_surface_data_type::mat4x4);
+	render_surface::set_data(working_surface, "camera_transform", render_camera::get_view_matrix(working_camera, aspect), render_surface_data_type::mat4x4);
+
+	render_surface::use(working_surface);
+
+	static_render_mesh::upload(maze_context->maze_mesh);
+	static_render_mesh::bind(maze_context->maze_mesh);
+
+	static_render_mesh::generic_draw(maze_context->maze_mesh);
 }

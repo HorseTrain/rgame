@@ -69,14 +69,14 @@ void render_surface::destroy(render_surface* render_surface_result)
 
 void render_surface::use(render_surface* render_surface_context)
 {
+	render_shader::use(render_surface_context->working_shader);
+
 	for (auto i : render_surface_context->surface_data)
 	{
 		render_surface_data working_render_surface_data = i.second;
 
 		upload_surface_data(render_surface_context, &working_render_surface_data);
 	}
-
-	render_shader::use(render_surface_context->working_shader);
 
 	for (int i = 0; i < sizeof(render_surface::textures) / sizeof(render_texture*); ++i)
 	{

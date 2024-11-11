@@ -5,11 +5,11 @@
 
 void set_outs()
 {
-    mat4 object_transform = mat4(1);
-
     uv_0 = i_uv_0;
     uv_1 = i_uv_1;
     uv_2 = i_uv_2;
+
+    mat4 object_transform = mat4(1);
 
     position = transform_point(object_transform, i_position);
 

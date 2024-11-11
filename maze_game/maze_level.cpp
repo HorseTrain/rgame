@@ -1,6 +1,7 @@
 #include "maze_level.h"
 #include "mario/level.h"
 #include "mario/game_object.h"
+#include "mario/debug_camera.h"
 #include "maze.h"
 
 void maze_level::create(maze_level** maze_level_context,level* level_context)
@@ -11,6 +12,7 @@ void maze_level::create(maze_level** maze_level_context,level* level_context)
 
 	result->maze_context = game_object::create_game_object<maze>(level_context);
 
+	debug_camera::create(&result->debug_camera_object, level_context);
 	maze::create(result->maze_context, result);
 
 	*maze_level_context = result;

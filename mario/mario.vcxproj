@@ -136,6 +136,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="debug_camera.cpp" />
     <ClCompile Include="entry.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="game_command.cpp" />
@@ -146,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="asset_helper.h" />
+    <ClInclude Include="debug_camera.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="game_command.h" />
     <ClInclude Include="game_object.h" />

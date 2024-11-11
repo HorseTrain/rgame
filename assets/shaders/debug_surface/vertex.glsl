@@ -25,5 +25,5 @@ void main()
 {
     set_outs();
 
-    gl_Position = camera_transform * vec4(position, 1);
+    gl_Position = camera_transform * object_transform * vec4(position, 1);
 }

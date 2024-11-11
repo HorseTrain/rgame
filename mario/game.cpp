@@ -29,7 +29,7 @@ static void init_debug_assets(game* game_context)
 	debug_mesh = lifetime_memory_manager::allocate<static_render_mesh>(&game_context->memory, "debug_plane");
 	static_render_mesh::create_debug_plane(debug_mesh, 100);
 
-	render_surface* debug_surface = create_debug_surface(game_context, "shaders/unskinned_actor/", "debug_surface");
+	render_surface* debug_surface = create_debug_surface(game_context, "shaders/debug_surface/", "debug_surface");
 	render_surface* debug_texture = create_debug_surface(game_context, "shaders/debug_texture/", "debug_texture");
 }
 
