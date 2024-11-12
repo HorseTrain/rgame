@@ -10,7 +10,7 @@
 
 struct static_render_mesh
 {
-	int							primative_type;
+	int32_t						primative_type;
 
 	fast_array<uint16_t>		indecies;
 	fast_array<render_vertex>	vertices;

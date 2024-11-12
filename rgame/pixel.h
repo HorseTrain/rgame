@@ -8,7 +8,6 @@
 #include <stddef.h>
 #include <stdio.h>
 
-#pragma pack(2)
 template <typename T, int C>
 struct pixel
 {

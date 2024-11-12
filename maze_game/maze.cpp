@@ -8,12 +8,23 @@
 #include "mario/game_object.h"
 #include "mario/game.h"
 #include "maze_generator.h"
+#include "maze_solver.h"
 
 static render_vertex from_position(float x, float y, float z)
 {
 	render_vertex result;
 
 	result.position = { x, y, z };
+
+	return result;
+}
+
+static render_vertex from_position(glm::vec3 position, glm::vec2 uv)
+{
+	render_vertex result;
+
+	result.position = position;
+	result.uv_0 = uv;
 
 	return result;
 }
@@ -26,6 +37,39 @@ static void destroy_current_maze_mesh(maze* maze_context)
 
 		delete maze_context->maze_mesh;
 	}
+}
+
+static void create_ctangular_prism(glm::vec3 start, float length, float width, float height, std::vector<render_vertex>* vertices, std::vector<uint16_t>* indices)
+{
+	vertices->push_back(from_position(start + glm::vec3(0,		0,		0),			glm::vec2(0, 0)));
+	vertices->push_back(from_position(start + glm::vec3(length, 0,		0),			glm::vec2(1, 0)));
+	vertices->push_back(from_position(start + glm::vec3(length, 0,		width),		glm::vec2(1, 1)));
+	vertices->push_back(from_position(start + glm::vec3(0,		0,		width),		glm::vec2(0, 1)));
+
+	vertices->push_back(from_position(start + glm::vec3(0,		height,	0),			glm::vec2(0, 0)));
+	vertices->push_back(from_position(start + glm::vec3(length, height,	0),			glm::vec2(1, 0)));
+	vertices->push_back(from_position(start + glm::vec3(length, height,	width),		glm::vec2(1, 1)));
+	vertices->push_back(from_position(start + glm::vec3(0,		height,	width),		glm::vec2(0, 1)));
+
+	vertices->push_back(from_position(start + glm::vec3(0,		0,		0),			glm::vec2(0, 0)));
+	vertices->push_back(from_position(start + glm::vec3(length,	0,		0),			glm::vec2(1, 0)));
+	vertices->push_back(from_position(start + glm::vec3(length,	height,	0),			glm::vec2(1, 1)));
+	vertices->push_back(from_position(start + glm::vec3(0,		height,	0),			glm::vec2(0, 1)));
+
+	vertices->push_back(from_position(start + glm::vec3(0,		0,		width),		glm::vec2(0, 0)));
+	vertices->push_back(from_position(start + glm::vec3(length, 0,		width),		glm::vec2(1, 0)));
+	vertices->push_back(from_position(start + glm::vec3(length, height, width),		glm::vec2(1, 1)));
+	vertices->push_back(from_position(start + glm::vec3(0,		height, width),		glm::vec2(0, 1)));
+
+	vertices->push_back(from_position(start + glm::vec3(length, 0,		0),			glm::vec2(0, 0)));
+	vertices->push_back(from_position(start + glm::vec3(length, 0,		width),		glm::vec2(1, 0)));
+	vertices->push_back(from_position(start + glm::vec3(length, height, width),		glm::vec2(1, 1)));
+	vertices->push_back(from_position(start + glm::vec3(length, height, 0),			glm::vec2(0, 1)));
+
+	vertices->push_back(from_position(start + glm::vec3(0,		0,		0),			glm::vec2(0, 0)));
+	vertices->push_back(from_position(start + glm::vec3(0,		0,		width),		glm::vec2(1, 0)));
+	vertices->push_back(from_position(start + glm::vec3(0,		height,	width),		glm::vec2(1, 1)));
+	vertices->push_back(from_position(start + glm::vec3(0,		height,	0),			glm::vec2(0, 1)));
 }
 
 void maze::create(maze* result, maze_level* maze_level_context)
@@ -134,6 +178,8 @@ void maze::generate_maze(maze* maze_context, int width, int height)
 
 	maze_generator::create(&maze_generator_context, maze_context);
 	maze_generator::generate_randomizd_depth_first_search(&maze_generator_context);
+
+	maze::generate_maze_mesh(maze_context);
 }
 
 static int create_multiplier(int source, int square_size)
@@ -205,11 +251,6 @@ void maze::generate_maze_texture(render_texture** render_texture_context, maze* 
 		draw_line(result, px, py, CELL_SIZE, key.direction == EAST_WEST, {0, 0, 0, 0});
 	}
 
-	for (int i = 0; i < maze_context->solution.size() - 1; ++i)
-	{
-		draw_line(result, maze_context->solution[i], maze_context->solution[i + 1], { 255, 0, 0, 255});
-	}
-
 	*render_texture_context = result;
 }
 
@@ -217,18 +258,48 @@ void maze::generate_maze_mesh(maze* maze_context)
 {
 	destroy_current_maze_mesh(maze_context);
 
-	maze_context->maze_mesh = new static_render_mesh;
+	static_render_mesh* result = new static_render_mesh();
+
+	std::vector<render_vertex> vertices;
+	std::vector<uint16_t> indices;
+
+	float scale = 1;
+	float height = 1;
 
 	for (auto i : maze_context->walls)
 	{
 		wall_key key = i.first;
-		maze_wall* working_wall = i.second;
+		maze_wall* wall = i.second;
 
-		if (working_wall->is_open)
+		if (wall->is_open)
 			continue;
+
+		int px = key.base_x ;
+		int py = key.base_y ;
+
+		glm::vec3 offset = glm::vec3(key.base_x, 0, key.base_y) * (float)CELL_SIZE;
+
+		if (key.direction == 0)
+		{
+			create_ctangular_prism(offset, CELL_SIZE, 1, height, &vertices, &indices);
+		}
+		else
+		{
+			create_ctangular_prism(offset, 1, CELL_SIZE, height, &vertices, &indices);
+		}
 	}
 
-	static_render_mesh::create_debug_triangle(maze_context->maze_mesh);
+	for (int i = 0; i < vertices.size(); ++i)
+	{
+		indices.push_back(i);
+	}
+
+	static_render_mesh::create(result, indices.size(), vertices.size(), GL_QUADS);
+
+	fast_array<uint16_t>::copy_from(&result->indecies, indices.data());
+	fast_array<render_vertex>::copy_from(&result->vertices, vertices.data());
+
+	maze_context->maze_mesh = result;
 }
 
 void maze::render_debug_texture(maze* maze_context)
@@ -248,10 +319,36 @@ maze_cell* maze::get_cell(maze* maze_context, int x, int y)
 	return maze_context->cells + (y * maze_context->cell_width) + x;
 }
 
+static void create_bot(maze* maze_context)
+{
+	maze_context->maze_solver_context = game_object::create_game_object<maze_solver>(maze_context->game_object_context->level_context);
+	maze_solver::create(maze_context->maze_solver_context, maze_context);
+
+	static_render_mesh* result = new static_render_mesh();
+
+	std::vector<render_vertex> vertices;
+	std::vector<uint16_t> indices;
+
+	create_ctangular_prism(glm::vec3(0), 1, 1, 1, &vertices, &indices);
+
+	for (int i = 0; i < vertices.size(); ++i)
+	{
+		indices.push_back(i);
+	}
+
+	static_render_mesh::create(result, indices.size(), vertices.size(), GL_QUADS);
+
+	fast_array<uint16_t>::copy_from(&result->indecies, indices.data());
+	fast_array<render_vertex>::copy_from(&result->vertices, vertices.data());
+
+	maze_context->maze_solver_context->mesh = result;
+}
+
 void maze::start(maze* maze_context)
 {
-	maze::generate_maze(maze_context, 100, 100);
-	maze::generate_maze_mesh(maze_context);
+	maze::generate_maze(maze_context, 20, 20);
+
+	create_bot(maze_context);
 }
 
 void maze::update(maze* maze_context)

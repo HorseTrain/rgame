@@ -140,6 +140,7 @@
     <ClCompile Include="maze_data.cpp" />
     <ClCompile Include="maze_generator.cpp" />
     <ClCompile Include="maze_level.cpp" />
+    <ClCompile Include="maze_solver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\mario\mario.vcxproj">
@@ -150,6 +151,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="maze_solver.h" />
     <ClInclude Include="randomized_depth_first_search.h" />
     <ClInclude Include="maze.h" />
     <ClInclude Include="maze_data.h" />

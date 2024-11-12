@@ -3,11 +3,13 @@
 #ifndef MAZE_H
 #define MAZE_H
 
-#include "maze_data.h"
-#include "rgame/pixel.h"
-#include "rgame/glm/vec2.hpp"
 #include <vector>
 #include <unordered_map>
+
+#include "maze_data.h"
+
+#include "rgame/pixel.h"
+#include "rgame/glm/vec2.hpp"
 
 #define CELL_SIZE 10
 
@@ -16,6 +18,7 @@ struct maze_level;
 struct render_texture;
 struct game_object;
 struct render_surface;
+struct maze_solver;
 
 struct maze
 {
@@ -26,9 +29,10 @@ struct maze
 											
 	maze_cell*								cells;
 	std::unordered_map<wall_key,maze_wall*>	walls;
-	std::vector<glm::vec2>					solution;
+	std::vector<maze_cell*>					solution;
 
 	static_render_mesh*						maze_mesh;
+	maze_solver*							maze_solver_context;
 
 	int										cell_width;
 	int										cell_height;

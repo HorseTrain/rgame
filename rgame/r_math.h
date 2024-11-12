@@ -44,4 +44,17 @@ static void clamp_angle(float* working, float min, float max)
 	}
 }
 
+static float lerp(float min, float max, float percent)
+{
+	return min + ((max - min) * percent);
+}
+
+static void lerp(float* result,float* min, float* max, float percent, int count)
+{
+	for (int i = 0; i < count; ++i)
+	{
+		result[i] = lerp(min[i], max[i], percent);
+	}
+}
+
 #endif

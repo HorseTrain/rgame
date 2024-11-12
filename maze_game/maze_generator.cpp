@@ -176,14 +176,7 @@ struct depth_search_bot_manager
 			stack.push(top_bot);
 		}
 
-		for (int i = 0; i < solution_cells.size(); ++i)
-		{
-			maze_cell* first_cell = solution_cells[i];
-
-			glm::vec2 first_point = (glm::ivec2(first_cell->x, first_cell->y) * (CELL_SIZE + 1)) + (glm::ivec2(CELL_SIZE) / 2);
-
-			maze_context->solution.push_back(first_point);
-		}
+		maze_context->solution = solution_cells;
 	}
 };
 
