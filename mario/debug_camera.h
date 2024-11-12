@@ -4,6 +4,7 @@
 #define DEBUG_CAMERA_H
 
 #include "rgame/glm/vec2.hpp"
+#include "rgame/glm/vec3.hpp"
 
 struct game_object;
 struct level;
@@ -13,14 +14,17 @@ struct transform;
 
 struct debug_camera
 {
-	game_object*	game_object_context;
-	render_camera*	working_render_camera;
-	input_manager*	input;
-	transform*		transform_context;
+	game_object* game_object_context;
+	render_camera* working_render_camera;
+	input_manager* input;
+	transform* transform_context;
 
 	float			sensitivity;
+	float			speed;
 
 	glm::vec2		view_rotation;
+	glm::vec3		velocity_vector;
+
 	glm::ivec2		last_mouse_position;
 
 	bool			camera_is_active;

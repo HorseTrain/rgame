@@ -16,7 +16,7 @@ T degrees_to_radians(T source)
 
 typedef glm::vec<3, uint8_t> ivec3b;
 
-static void clamp_angle(float* working)
+static void mod_angle(float* working)
 {
 	while (*working > TWO_M_PI)
 	{
@@ -29,5 +29,19 @@ static void clamp_angle(float* working)
 	}
 }
 
+static void clamp_angle(float* working, float min, float max)
+{
+	assert(max > min);
+
+	if (*working < min)
+	{
+		*working = min;
+	}
+
+	if (*working > max)
+	{
+		*working = max;
+	}
+}
 
 #endif
