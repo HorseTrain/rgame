@@ -319,12 +319,16 @@ maze_cell* maze::get_cell(maze* maze_context, int x, int y)
 	return maze_context->cells + (y * maze_context->cell_width) + x;
 }
 
-static void create_bot(maze* maze_context)
+static void create_bot(maze* maze_context, int time)
 {
-	maze_context->maze_solver_context = game_object::create_game_object<maze_solver>(maze_context->game_object_context->level_context);
-	maze_solver::create(maze_context->maze_solver_context, maze_context);
+	maze_solver* maze_solver_context = game_object::create_game_object<maze_solver>(maze_context->game_object_context->level_context);
+	maze_solver::create(maze_solver_context, maze_context);
+
+	maze_solver_context->time = time;
 
 	static_render_mesh* result = new static_render_mesh();
+
+	maze_solver_context->mesh = result;
 
 	std::vector<render_vertex> vertices;
 	std::vector<uint16_t> indices;
@@ -340,15 +344,14 @@ static void create_bot(maze* maze_context)
 
 	fast_array<uint16_t>::copy_from(&result->indecies, indices.data());
 	fast_array<render_vertex>::copy_from(&result->vertices, vertices.data());
-
-	maze_context->maze_solver_context->mesh = result;
 }
 
 void maze::start(maze* maze_context)
 {
 	maze::generate_maze(maze_context, 20, 20);
 
-	create_bot(maze_context);
+	for (int i = 0; i < maze_context->solution.size(); ++i)
+		create_bot(maze_context, i);
 }
 
 void maze::update(maze* maze_context)

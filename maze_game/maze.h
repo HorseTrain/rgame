@@ -32,7 +32,6 @@ struct maze
 	std::vector<maze_cell*>					solution;
 
 	static_render_mesh*						maze_mesh;
-	maze_solver*							maze_solver_context;
 
 	int										cell_width;
 	int										cell_height;

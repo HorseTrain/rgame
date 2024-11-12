@@ -23,7 +23,7 @@ void maze_solver::create(maze_solver* result, maze* maze_context)
 
 void maze_solver::start(maze_solver* maze_solver_context)
 {
-	maze_solver_context->time = 0;
+	//maze_solver_context->time = 0;
 }
 
 static glm::vec2 get_cell_location(maze_cell* cell)

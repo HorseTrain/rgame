@@ -23,7 +23,7 @@ void debug_camera::create(debug_camera** output, level* level_context)
 	result->input = result->game_object_context->game_context->input_manager_context;
 
 	result->sensitivity = 0.001;
-	result->speed = 0.1f;
+	result->speed = 1;
 
 	render_camera::create_empty(&level_context->working_camera, 60, 1, 1000);
 
