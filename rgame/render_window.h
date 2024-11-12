@@ -40,6 +40,7 @@ struct render_window
 	static void		poll_events(render_window* window);
 	static void		swap_buffers(render_window* window);
 	static float	get_aspect_ratio(render_window* window);
+	static void		set_resizable(render_window* window, bool is_resizable);
 
 	static void		run(render_window* window, void* arguments);
 };

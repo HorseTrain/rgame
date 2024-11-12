@@ -125,3 +125,8 @@ float render_window::get_aspect_ratio(render_window* window)
 {
 	return (float)window->window_width / (float)window->window_height;
 }
+
+void render_window::set_resizable(render_window* window, bool is_resizable)
+{
+	glfwSetWindowAttrib(window->raw_window, GLFW_RESIZABLE, is_resizable);
+}
