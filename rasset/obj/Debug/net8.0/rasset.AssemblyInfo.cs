@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("rasset")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fd6e6e6700096a92f897568d7c14aff411392235")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+71585affc3ae86da3d3120b77231e16aec72154b")]
 [assembly: System.Reflection.AssemblyProductAttribute("rasset")]
 [assembly: System.Reflection.AssemblyTitleAttribute("rasset")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

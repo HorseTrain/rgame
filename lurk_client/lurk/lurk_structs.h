@@ -5,9 +5,9 @@
 
 #include <inttypes.h>
 
-#pragma pack(2)
+#pragma pack(push,1)
 
-struct message
+struct lurk_message
 {
     uint8_t     type;
     uint16_t    message_length;
@@ -16,48 +16,48 @@ struct message
     uint16_t    end_of_struct;
 };
 
-struct change_room
+struct lurk_change_room
 {
     uint8_t     type;
     uint16_t    number_of_room_to_change_to;
 };
 
-struct fight
+struct lurk_fight
 {
     uint8_t     type;
 };
 
-struct pvp_fight
-{
-    uint8_t     type;
-    uint8_t     name_of_target_player[32];
-};
-
-struct loot
+struct lurk_pvp_fight
 {
     uint8_t     type;
     uint8_t     name_of_target_player[32];
 };
 
-struct start
+struct lurk_loot
+{
+    uint8_t     type;
+    uint8_t     name_of_target_player[32];
+};
+
+struct lurk_start
 {
     uint8_t     type; //SHOULD ALWAYS BE 6
 };
 
-struct error
+struct lurk_error
 {
     uint8_t     type;
     uint8_t     error_code;
     uint16_t    error_message_length;
 };
 
-struct accept
+struct lurk_accept
 {
     uint8_t     type;
     uint8_t     type_of_action;
 };
 
-struct room
+struct lurk_room
 {
     uint8_t     type;
     uint16_t    room_number;
@@ -65,7 +65,7 @@ struct room
     uint16_t    room_description_length;
 };
 
-struct character
+struct lurk_character
 {
     uint8_t     type;
     uint8_t     name_of_player[32];
@@ -79,7 +79,7 @@ struct character
     uint16_t    description_length;
 };
 
-struct game
+struct lurk_game
 {
     uint8_t     type;
     uint16_t    initial_points;
@@ -87,12 +87,12 @@ struct game
     uint16_t    description_length;
 };
 
-struct leave
+struct lurk_leave
 {
     uint8_t     type;
 };
 
-struct connection
+struct lurk_connection
 {
     uint8_t     type;
     uint16_t    room_number;
@@ -100,7 +100,7 @@ struct connection
     uint16_t    room_description_length;
 };
 
-struct version
+struct lurk_version
 {
     uint8_t     type;
     uint8_t     major;
@@ -130,6 +130,6 @@ enum error_code : uint8_t
     no_pvp
 };
 
-#pragma pack()
+#pragma pack(pop)
 
 #endif
