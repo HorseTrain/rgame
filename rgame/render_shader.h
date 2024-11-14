@@ -35,6 +35,8 @@ struct render_shader
 	static void					destroy(render_shader* program);
 	static void					use(render_shader* program);
 	static void					uniform_mat4(render_shader* program,std::string name, glm::mat4 data);
+	static void					uniform_vec3(render_shader* program, std::string name, glm::vec3 data);
+	static void					uniform_vec2(render_shader* program, std::string name, glm::vec2 data);
 	static int					get_uniform_location(render_shader* program, std::string name);
 } ;
 

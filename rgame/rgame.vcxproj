@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="debug_mesh.cpp" />
+    <ClCompile Include="font_atlas.cpp" />
     <ClCompile Include="input_manager.cpp" />
     <ClCompile Include="io.cpp" />
     <ClCompile Include="lifetime_memory_manager.cpp" />
@@ -31,10 +33,13 @@
     <ClCompile Include="render_window.cpp" />
     <ClCompile Include="r_asset.cpp" />
     <ClCompile Include="shader_compiler.cpp" />
+    <ClCompile Include="software_text_renderer.cpp" />
     <ClCompile Include="transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="big_int.h" />
+    <ClInclude Include="debug_mesh.h" />
+    <ClInclude Include="font_atlas.h" />
     <ClInclude Include="GLFW\glfw3.h" />
     <ClInclude Include="GLFW\glfw3native.h" />
     <ClInclude Include="GL\eglew.h" />
@@ -56,6 +61,7 @@
     <ClInclude Include="r_asset.h" />
     <ClInclude Include="r_math.h" />
     <ClInclude Include="shader_compiler.h" />
+    <ClInclude Include="software_text_renderer.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="string_tools.h" />
     <ClInclude Include="transform.h" />

@@ -17,6 +17,8 @@ struct lurk_client
 
 	static void send_data_raw(lurk_client* lurk_client_context, void* data, int count);
 	static bool read_data_raw(void* result, int intended_size, lurk_client* lurk_client_context);
+
+	static void send_leave(lurk_client* lurk_client_context);
 };
 
 #endif

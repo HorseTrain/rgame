@@ -94,4 +94,11 @@ bool lurk_client::read_data_raw(void* result, int intended_size, lurk_client* lu
 	return recv(lurk_client_context->socket_handle, (char*)result, intended_size, MSG_WAITALL) == intended_size;
 }
 
+void lurk_client::send_leave(lurk_client* lurk_client_context)
+{
+	char type = 12;
+
+	send_data_raw(lurk_client_context, &type, 1);
+}
+
 

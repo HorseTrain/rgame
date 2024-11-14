@@ -62,17 +62,14 @@ void render_window::run(render_window* window, void* arguments)
 
 	window->delta_time = 1;
 
-	if (window->start != nullptr)
-	{
-		window->start(window, arguments);
-	}
+	bool started = false;
 
 	while (!should_window_close(window))
 	{
 		auto start_time = std::chrono::high_resolution_clock::now();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(.5, .5, .5, 1);
+		glClearColor(0.1f, 0.1f, 1, 1);
 
 		poll_events(window);
 
@@ -80,6 +77,13 @@ void render_window::run(render_window* window, void* arguments)
 		glViewport(0, 0, window->window_width, window->window_height);
 
 		input_manager::update(&window->input_manager_context);
+
+		if (window->start != nullptr && !started)
+		{
+			window->start(window, arguments);
+
+			started = true;
+		}
 
 		if (window->loop != nullptr)
 		{

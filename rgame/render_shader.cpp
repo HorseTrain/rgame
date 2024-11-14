@@ -93,6 +93,22 @@ void render_shader::uniform_mat4(render_shader* program, std::string name, glm::
 	glUniformMatrix4fv(uniform_location, 1, false, (float*)&data);
 }
 
+void render_shader::uniform_vec3(render_shader* program, std::string name, glm::vec3 data)
+{
+	use(program);
+
+	int uniform_location = render_shader::get_uniform_location(program, name);
+	glUniform3f(uniform_location, data.x, data.y, data.z);
+}
+
+void render_shader::uniform_vec2(render_shader* program, std::string name, glm::vec2 data)
+{
+	use(program);
+
+	int uniform_location = render_shader::get_uniform_location(program, name);
+	glUniform2f(uniform_location, data.x, data.y);
+}
+
 int render_shader::get_uniform_location(render_shader* program, std::string name)
 {
 	if (program->handle == -1)

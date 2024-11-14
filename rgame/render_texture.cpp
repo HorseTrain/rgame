@@ -46,6 +46,26 @@ void render_texture::create_empty(render_texture* result, int width, int height,
 	}
 }
 
+void render_texture::clear_color(render_texture* result, int pixel_size)
+{
+	int texture_buffer_size = result->width * result->height * pixel_size;
+
+	for (int i = 0; i < texture_buffer_size; ++i)
+	{
+		*(uint8_t*)((char*)result->texture_buffer + i) = 0;
+	}
+}
+
+void render_texture::unload(render_texture* render_texture_context)
+{
+	if (render_texture_context->gl_handle == -1)
+		return;
+
+	glDeleteTextures(1, (GLuint*)&render_texture_context->gl_handle);
+
+	render_texture_context->gl_handle = -1;
+}
+
 void render_texture::destroy(render_texture* render_texture_context)
 {
 	if (render_texture_context->texture_buffer != nullptr)
