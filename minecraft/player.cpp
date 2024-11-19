@@ -6,6 +6,7 @@
 #include "world.h"
 
 #include "chunk.h"
+#include "block.h"
 
 void player::create(player* player_context, world* world_context)
 {
@@ -21,6 +22,25 @@ void player::create(player* player_context, world* world_context)
 void player::destroy(player* player_context)
 {
 	//
+}
+
+static void draw_debug_retical(render_window* render_window_context)
+{
+	glUseProgram(0);
+
+	glBegin(GL_QUADS);
+
+	float size = 0.01f;
+
+	float width = size / render_window::get_aspect_ratio(render_window_context);
+	float height = size;
+
+	glVertex3f(width, height, 0);
+	glVertex3f(-width, height, 0);
+	glVertex3f(-width, -height, 0);
+	glVertex3f(width, -height, 0);
+
+	glEnd();
 }
 
 static void player_update_spectator(player* player_context)
@@ -56,7 +76,7 @@ static void player_update_spectator(player* player_context)
 
 	if (glm::length(intended_movement_direction) > 0)
 	{
-		intended_movement_direction = glm::normalize(intended_movement_direction) * delta_time * 4.0f;
+		intended_movement_direction = glm::normalize(intended_movement_direction) * delta_time ;
 	}
 	else
 	{
@@ -74,19 +94,32 @@ static void player_update_spectator(player* player_context)
 
 	if (mouse_click)
 	{
-		forward = glm::normalize(transform::get_forward(current_transform_matrix));
+		forward = glm::normalize(transform::get_forward( glm::mat4_cast(player_context->transform_context.rotation) ));
 
-		int block_count = 10;
+		int block_count = 1000;
 
-		for (int i = 0; i < block_count; ++i)
+		for (int i = 1; i < block_count; ++i)
 		{
-			glm::vec3 test_position = player_context->transform_context.position + (forward * (float)i);
+			glm::vec3 test_position = player_context->transform_context.position + (-forward * (float)i);
 
 			glm::ivec3 i_position = test_position;
 
+			chunk* working_chunk;
+			block* working_block;
 
+			world::get_block(player_context->world_context, i_position, &working_block, &working_chunk);
+
+			if (!working_block->is_transparent)
+			{
+				working_block->is_transparent = true;
+				chunk::regenerate_mesh(working_chunk, true);
+
+				break;
+			}
 		}
 	}
+
+	draw_debug_retical(render_window);
 }
 
 static void player_update_lab4(player* player_context)

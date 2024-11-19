@@ -27,6 +27,7 @@ struct chunk_manager
 	static void		create(chunk_manager* chunk_manager_context, world* world_context);
 	static void		destroy(chunk_manager* chunk_manager_context);
 	static void		update(chunk_manager* chunk_manager_context);
+	static void		ready_chunk_for_destruction(chunk_manager* chunk_manager_context, chunk* chunk_context);
 };
 
 #endif

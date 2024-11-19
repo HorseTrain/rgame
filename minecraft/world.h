@@ -11,6 +11,9 @@
 #include "player.h"
 
 struct game;
+struct block_data;
+struct chunk;
+struct block;
 
 struct world
 {
@@ -23,6 +26,7 @@ struct world
 	static void create(world* result, game* game_context, uint64_t seed);
 	static void destroy(world* world_context);
 	static void update(world* world_context);
+	static void get_block(world* world_context, glm::ivec3 position, block** result_block, chunk** result_chunk);
 };
 
 #endif

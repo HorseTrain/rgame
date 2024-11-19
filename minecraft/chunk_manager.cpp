@@ -83,9 +83,17 @@ static void render_chunks(chunk_manager* chunk_manager_context, std::vector<chun
 			chunk_mesh::upload(working_chunk_mesh);
 		}
 
+		glUniform1f(render_shader::get_uniform_location(chunk_shader, "is_highlighted"), working_chunk->highlight);
 		glUniform3f(render_shader::get_uniform_location(chunk_shader, "chunk_offset"), working_chunk->position.x, working_chunk->position.y, working_chunk->position.z);
 
 		chunk_mesh::draw(working_chunk_mesh);
+
+		working_chunk->highlight -= render_window_context->delta_time * 0.05f;
+
+		if (working_chunk->highlight < 0)
+		{
+			working_chunk->highlight = 0;
+		}
 	}
 }
 
@@ -192,11 +200,7 @@ static void update_current_chunks(chunk_manager* chunk_manager_context)
 
 		if (!chunk::in_render_distance(working_chunk) && working_chunk->data_ready && !working_chunk->generating_data)
 		{
-			working_chunk->marked_for_destruction = true;
-
-			uint64_t times[] = { chunk_manager_context->time, chunk_manager_context->data_creation_thread.time, chunk_manager_context->mesh_creation_thread.time };
-
-			chunk_store::ghost_chunk(chunk_store_context, working_chunk, times);
+			chunk_manager::ready_chunk_for_destruction(chunk_manager_context, working_chunk);
 
 			continue;
 		}
@@ -257,4 +261,13 @@ void chunk_manager::update(chunk_manager* chunk_manager_context)
 	chunk_manager_context->time++;
 
 	update_current_chunks(chunk_manager_context);
+}
+
+void chunk_manager::ready_chunk_for_destruction(chunk_manager* chunk_manager_context, chunk* working_chunk)
+{
+	working_chunk->marked_for_destruction = true;
+
+	uint64_t times[] = { chunk_manager_context->time, chunk_manager_context->data_creation_thread.time, chunk_manager_context->mesh_creation_thread.time };
+
+	chunk_store::ghost_chunk(&chunk_manager_context->chunks, working_chunk, times);
 }

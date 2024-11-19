@@ -24,6 +24,11 @@ void chunk_store::destroy(chunk_store* chunk_store_context)
 
 chunk* chunk_store::create_or_get_chunk(chunk_store* chunk_store_context, KEY_TYPE location)
 {
+	for (int i = 0; i < 3; ++i)
+	{
+		assert(location[i] % CUBE_CHUNK_SIZE == 0);
+	}
+
 	std::mutex* lock = &chunk_store_context->chunk_access_lock;
 	std::unordered_map<KEY_TYPE, chunk*>* chunks = &chunk_store_context->chunks;
 

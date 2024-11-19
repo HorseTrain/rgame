@@ -40,10 +40,10 @@ void chunk_mesh::destroy(chunk_mesh* chunk_mesh_context)
 
 void chunk_mesh::upload(chunk_mesh* chunk_mesh_context)
 {
+	unload(chunk_mesh_context);
+
 	if (chunk_mesh_context->vertex_data.size() == 0)
 		return;
-
-	destroy(chunk_mesh_context);
 
 	glGenVertexArrays(1, &chunk_mesh_context->vao);
 	glBindVertexArray(chunk_mesh_context->vao);

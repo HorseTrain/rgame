@@ -154,6 +154,8 @@ void chunk::create(chunk** result, chunk_manager* chunk_manager_context, glm::iv
 	working_result->position = position;
 	working_result->chunk_manager_context = chunk_manager_context;
 
+	working_result->highlight = 1;
+
 	working_result->chunk_mesh_context = new chunk_mesh();
 	chunk_mesh::create(working_result->chunk_mesh_context);
 
@@ -219,6 +221,49 @@ void chunk::generate_data(chunk* chunk_context)
 	chunk_context->generating_data = false;
 }
 
+void chunk::regenerate_mesh(chunk* chunk_context, bool recurse_neighbors)
+{
+	chunk_mesh::unload(chunk_context->chunk_mesh_context);
+
+	chunk_context->block_locations = std::vector<ivec3b>();
+	chunk_context->non_transparent = 0;
+		
+	for (int x = 0; x < CUBE_CHUNK_SIZE; ++x)
+	{
+		for (int y = 0; y < CUBE_CHUNK_SIZE; ++y)
+		{
+			for (int z = 0; z < CUBE_CHUNK_SIZE; ++z)
+			{
+				block* block_reference = get_block_reference(chunk_context, x, y, z);
+
+				if (!block_reference->is_transparent)
+				{
+					chunk_context->block_locations.push_back({ x, y, z });
+
+					chunk_context->non_transparent++;
+				}
+			}
+		}
+	}
+
+	chunk_context->mesh_ready = false;
+
+	chunk::generate_mesh(chunk_context);
+
+	chunk_context->mesh_ready = true;
+
+	if (!recurse_neighbors)
+		return;
+
+	for (int i = 0; i < 6; ++i)
+	{
+		if (chunk_context->neighbors[i] == nullptr)
+			continue;
+
+		regenerate_mesh(chunk_context->neighbors[i], false);
+	}
+}
+
 void chunk::generate_mesh(chunk* chunk_context)
 {
 	if (!ready_for_mesh_generation(chunk_context))
@@ -234,6 +279,8 @@ void chunk::generate_mesh(chunk* chunk_context)
 	chunk_context->generating_data = true;
 
 	chunk_mesh* working_mesh = chunk_context->chunk_mesh_context;
+
+	working_mesh->vertex_data = std::vector<chunk_vertex>();
 
 	for (int i = 0; i < chunk_context->block_locations.size(); ++i)
 	{
@@ -353,7 +400,7 @@ int chunk::get_block_index(int x, int y, int z)
 	return (x * CUBE_CHUNK_SIZE * CUBE_CHUNK_SIZE) + (y * CUBE_CHUNK_SIZE) + z;
 }
 
-block* chunk::get_block_reference(chunk* chunk_context, int x, int y, int z)
+block* chunk::get_block_reference(chunk* chunk_context, int x, int y, int z, bool allow_nullptr)
 {
 	chunk_store* chunk_store_context = &chunk_context->chunk_manager_context->chunks;
 	chunk* other_chunk = nullptr;
@@ -435,6 +482,11 @@ block* chunk::get_block_reference(chunk* chunk_context, int x, int y, int z)
 	block* result = &chunk_context->block_data[chunk_index];
 
 	return result;
+}
+
+block* chunk::get_block_reference(chunk* chunk_context, glm::ivec3 position)
+{
+	return chunk::get_block_reference(chunk_context, position.x, position.y, position.z);
 }
 
 bool chunk::in_render_distance(chunk* chunk_context)
