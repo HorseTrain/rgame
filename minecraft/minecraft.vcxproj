@@ -142,6 +142,7 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="graphics_asset.cpp" />
     <ClCompile Include="graphics_asset_manager.cpp" />
+    <ClCompile Include="perlin.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="render_shader_manager.cpp" />
     <ClCompile Include="render_texture_manager.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="chunk_store.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="graphics_asset_manager.h" />
+    <ClInclude Include="perlin.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="render_shader_manager.h" />
     <ClInclude Include="render_texture_manager.h" />

@@ -57,6 +57,8 @@ int main(int argc, char** argv)
 
 	render_window test_window;
 
+	test_window.default_color = { 0.1, 0.1, 0.1, 0 };
+
 	render_window::create(&test_window, loop, 500, 500, 60, "minecraft");
 	render_window::run(&test_window, game_arguments);
 

@@ -9,6 +9,7 @@
 
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
+#include "rgame/glm/vec4.hpp"
 
 struct render_window;
 
@@ -25,6 +26,9 @@ struct render_window
 
 	float			delta_time;
 	float			target_framerate;
+	float			current_frame_rate;
+
+	glm::vec4		default_color;
 
 	bool			force_close;
 

@@ -69,6 +69,24 @@ static void player_update_spectator(player* player_context)
 
 	camera->transform_context.position = player_context->transform_context.position;
 	camera->transform_context.rotation = player_context->transform_context.rotation;
+
+	bool mouse_click = input_manager::get_key_pressed(input_manager_context, GLFW_MOUSE_BUTTON_1);
+
+	if (mouse_click)
+	{
+		forward = glm::normalize(transform::get_forward(current_transform_matrix));
+
+		int block_count = 10;
+
+		for (int i = 0; i < block_count; ++i)
+		{
+			glm::vec3 test_position = player_context->transform_context.position + (forward * (float)i);
+
+			glm::ivec3 i_position = test_position;
+
+
+		}
+	}
 }
 
 static void player_update_lab4(player* player_context)
@@ -89,7 +107,6 @@ static void player_update_lab4(player* player_context)
 	glm::vec3 right = transform::get_right(current_transform_matrix) * (float)left_right_axis;
 	glm::vec3 up = glm::vec3(0, 1, 0) * (float)up_down_axis;
 
-	//if ()
 	float angle_div = 0.0005f;
 
 	if (player_context->world_context->game_context->mouse_toggle == 1)

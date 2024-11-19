@@ -15,7 +15,7 @@ struct pixel
 
 	static pixel* get_pixel(pixel* buffer, int x, int y, int width)
 	{
-		return buffer + ((y * width) + x);
+		return buffer + (y * width) + x;
 	}
 };
 

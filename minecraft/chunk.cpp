@@ -6,6 +6,7 @@
 #include "iostream"
 #include "player.h"
 #include "world.h"
+#include "perlin.h"
 
 #include "rgame/glm/glm.hpp"
 
@@ -16,7 +17,7 @@
 #define NEIGHBOR_PZ 4
 #define NEIGHBOR_NZ 5
 
-static void create_block_data(chunk* chunk_context, block* block_reference, int x, int y, int z)
+static void create_block_data(chunk* chunk_context, block* block_reference, int x, int y, int z, float height)
 {
 	ivec3b local_position = ivec3b(x, y, z);
 	glm::ivec3 world_position = glm::ivec3(x, y, z) + chunk_context->position;
@@ -27,8 +28,6 @@ static void create_block_data(chunk* chunk_context, block* block_reference, int 
 
 	float amp = 5;
 	float freq = 0.05;
-
-	float height = (sin(x * freq) + sin(y * freq) + sin(z * freq)) * amp;
 
 	if (y > height)
 	{
@@ -194,13 +193,22 @@ void chunk::generate_data(chunk* chunk_context)
 
 	for (int x = 0; x < CUBE_CHUNK_SIZE; ++x)
 	{
-		for (int y = 0; y < CUBE_CHUNK_SIZE; ++y)
+		for (int z = 0; z < CUBE_CHUNK_SIZE; ++z)
 		{
-			for (int z = 0; z < CUBE_CHUNK_SIZE; ++z)
+			float hx = chunk_context->position.x + x;
+			float hz = chunk_context->position.z + z;
+
+			float normal_height = perlin::get_x_y_perlin(&chunk_context->chunk_manager_context->normal_noise, hx / 200.0f,hz / 200.0f) * .5f;
+			float mountain_height = perlin::get_x_y_perlin(&chunk_context->chunk_manager_context->mountain_noise, hx / 10000.0f, hz / 10000.0f);
+			float min_height = perlin::get_x_y_perlin(&chunk_context->chunk_manager_context->mini_noise, hx / 20.0f, hz / 20.0f) * 0.1f;
+
+			float height = normal_height + mountain_height + min_height;
+
+			for (int y = 0; y < CUBE_CHUNK_SIZE; ++y)
 			{
 				block* block = get_block_reference(chunk_context, x, y, z);
 
-				create_block_data(chunk_context, block, x, y, z);
+				create_block_data(chunk_context, block, x, y, z, height);
 
 				if (!block->is_transparent)
 					chunk_context->non_transparent++;

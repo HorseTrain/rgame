@@ -1,6 +1,11 @@
 #include "input_manager.h"
 #include "render_window.h"
 
+static bool is_mouse(int key)
+{
+	return key >= GLFW_MOUSE_BUTTON_1 && key <= GLFW_MOUSE_BUTTON_MIDDLE;
+}
+
 static void register_key(input_manager* input_manager_context, int key)
 {
 	std::map<int, press_data>* key_data_ptr = &input_manager_context->requested_keys;
@@ -25,6 +30,11 @@ void input_manager::create(input_manager* result, render_window* window)
 
 		register_key(result, i);
 	}
+
+	for (int i = GLFW_MOUSE_BUTTON_1; i <= GLFW_MOUSE_BUTTON_MIDDLE; ++i)
+	{
+		register_key(result, i);
+	}
 }
 
 void input_manager::update(input_manager* input_manager_context)
@@ -37,7 +47,15 @@ void input_manager::update(input_manager* input_manager_context)
 		press_data* data_ptr	= &i->second;
 
 		data_ptr->last_down		= data_ptr->is_down;
-		data_ptr->is_down		= glfwGetKey(input_manager_context->window->raw_window, key);
+
+		if (is_mouse(key))
+		{
+			data_ptr->is_down = glfwGetMouseButton(input_manager_context->window->raw_window, key);
+		}
+		else
+		{
+			data_ptr->is_down = glfwGetKey(input_manager_context->window->raw_window, key);
+		}
 	}
 
 	double mouse[2];

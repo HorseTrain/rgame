@@ -40,7 +40,7 @@ static void create_entry(font_atlas* result, std::string line)
 
 	assert(result->entries.find(entry.id) == result->entries.end());
 
-	result->entries[entry.id] = entry;
+	entry.font_atlas_context = result;
 
 	result->average_x_advance += entry.x_advance;
 
@@ -48,6 +48,8 @@ static void create_entry(font_atlas* result, std::string line)
 	{
 		result->max_y_advance = entry.height;
 	}
+
+	result->entries[entry.id] = entry;
 }
 
 static void create(font_atlas* result, std::string font_atlas,render_texture* font_atlas_texture)

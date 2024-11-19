@@ -69,7 +69,7 @@ void render_window::run(render_window* window, void* arguments)
 		auto start_time = std::chrono::high_resolution_clock::now();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(0.1f, 0.1f, 1, 1);
+		glClearColor(window->default_color.x, window->default_color.y, window->default_color.z, window->default_color.w);
 
 		poll_events(window);
 
@@ -96,8 +96,8 @@ void render_window::run(render_window* window, void* arguments)
 
 		auto elapsed_nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
 
-		double framerate = (1000000000.0 / (double)elapsed_nanoseconds);
-		double delta_time = (double)window->target_framerate / framerate;
+		window->current_frame_rate = (1000000000.0 / (double)elapsed_nanoseconds);
+		double delta_time = (double)window->target_framerate / window->current_frame_rate;
 
 		if (delta_time > 1)
 			delta_time = 1;

@@ -5,46 +5,70 @@
 #include "rgame/glm/vec2.hpp"
 #include "rgame/glm/vec4.hpp"
 
-static void set_pixel(render_texture* result, int x, int y, rgba_i8 data)
+struct letter
 {
-	*rgba_i8::get_pixel((rgba_i8*)result->texture_buffer, x, y, result->width) = data;
-}
+	font_entry* entry;
+	char		id;
 
-static rgba_i8 get_pixel(render_texture* result, int x, int y)
-{
-	return *rgba_i8::get_pixel((rgba_i8*)result->texture_buffer, x, y, result->width);
-}
+	glm::vec2	result_offset;
+	float		scale;
+};
 
 static bool in_bound(glm::ivec2 pixel, glm::ivec2 size)
 {
-	for (int i = 0; i < 2; ++i)
-	{
-		if (pixel[i] < 0)
-			return false;
-
-		if (pixel[i] >= size[i])
-			return false;
-	}
-
-	return true;
+	return !(pixel.x < 0 || pixel.x >= size.x || pixel.y < 0 || pixel.y >= size.y);
 }
 
-static rgba_i8 get_pixel_blur(render_texture* source, int x, int y, int blur)
+static bool in_bound(render_texture* render_texture_context, glm::ivec2 point)
 {
+	return in_bound(point, glm::ivec2(render_texture_context->width, render_texture_context->height));
+}
+
+static void set_pixel(render_texture* result, int x, int y, rgba_i8 data)
+{
+	if (!in_bound(result, glm::ivec2(x, y)))
+		return;
+
+	*rgba_i8::get_pixel((rgba_i8*)result->texture_buffer, x, y, result->width) = data;
+}
+
+static rgba_i8 get_pixel(render_texture* result, int x, int y, font_entry* working_entry)
+{
+	if (working_entry != nullptr)
+	{
+		if
+			(x < working_entry->x || x >= (working_entry->x + working_entry->width) ||
+			(y < working_entry->y || y >= (working_entry->y + working_entry->height)
+		))
+		return { 0,0,0,0 };
+	}
+
+	return *rgba_i8::get_pixel((rgba_i8*)result->texture_buffer, x, y, result->width);
+}
+
+static rgba_i8 get_pixel_blur(render_texture* source, int x, int y, int blur, font_entry* working_atlas = nullptr)
+{
+	if (blur == 0)
+	{
+		return get_pixel(source, x, y, working_atlas);
+	}
+
 	glm::vec4 result_color = glm::vec4(0);
 
 	int avg = 0;
 
-	for (int oy = 0; oy < blur; ++oy)
+	for (int oy = -blur; oy <= blur; ++oy)
 	{
-		for (int ox = 0; ox < blur; ++ox)
+		for (int ox = -blur; ox <= blur; ++ox)
 		{
-			glm::ivec2 working_source_position = glm::ivec2(x, y) + (glm::ivec2(ox, oy) - glm::ivec2(blur / 2));
+			glm::ivec2 working_source_position = glm::ivec2(x, y) + glm::ivec2(ox, oy);
 
 			if (!in_bound(working_source_position, glm::vec2(source->width, source->height)))
+			{
 				continue;
+			}
 
-			rgba_i8 working_color = get_pixel(source, working_source_position.x, working_source_position.y);
+			rgba_i8 working_color = get_pixel(source, working_source_position.x, working_source_position.y, working_atlas);
 
 			result_color += glm::vec4(working_color.data[0], working_color.data[1], working_color.data[2], working_color.data[3]);
 
@@ -57,34 +81,37 @@ static rgba_i8 get_pixel_blur(render_texture* source, int x, int y, int blur)
 	return { (uint8_t)result_color.x, (uint8_t)result_color.y , (uint8_t)result_color.z , (uint8_t)result_color.w };
 }
 
-static void write_texture(render_texture* result, render_texture* source, glm::ivec2 result_offset, glm::ivec2 source_offset, glm::ivec2 source_size, float scale, int* x_advance)
+static void write_character_to_buffer(render_texture* result, letter* to_write, int blur, float scale)
 {
-	source_size = (glm::ivec2)((glm::vec2)source_size * scale);
+	if (to_write->entry == nullptr)
+		return;
 
-	int blur = 3;
+	font_entry* entry = to_write->entry;
 
-	for (int y = 0; y < source_size.y; ++y)
+	glm::vec2 x_advance = glm::vec2(-blur, entry->width + blur);
+	glm::vec2 y_advance = glm::vec2(-blur, entry->height + blur);
+
+	float append = 1.0 / scale;
+
+	for (float y = y_advance.x; y < y_advance.y; y += append)
 	{
-		for (int x = 0; x < source_size.x; ++x)
+		for (float x = x_advance.x; x < x_advance.y; x += append)
 		{
-			glm::ivec2 result_location = result_offset + glm::ivec2(x, y);
-			glm::ivec2 source_location = glm::ivec2(source_offset.x, source_offset.y) + (glm::ivec2)(glm::vec2(x, y) / scale);
+			int ix = (int)x;
+			int iy = (int)y;
 
-			if (!in_bound(result_location, glm::vec2(result->width, result->height)) ||
-				!in_bound(source_location, glm::vec2(source->width, source->height))
-				)
-				return;
+			glm::ivec2 result_offset = to_write->result_offset + glm::vec2(ix + entry->x_offset, iy + entry->y_offset) * scale;
 
-			rgba_i8 source_pixel = get_pixel_blur(source, source_location.x, source_location.y, blur);
-
-			if (source_pixel.data[3] == 0)
+			if (!in_bound(result, { ix, iy }))
+			{
 				continue;
+			}
 
-			set_pixel(result, result_location.x, result_location.y, source_pixel);
+			rgba_i8 source_color = get_pixel_blur(entry->font_atlas_context->font_atlas_texture, entry->x + ix,entry->y + iy, blur, entry);
+
+			set_pixel(result, result_offset.x, result_offset.y, source_color);
 		}
 	}
-
-	*x_advance = (int)(*x_advance * scale);
 }
 
 void software_text_renderer::create(software_text_renderer* result, int texture_width, int texture_height, float scale, font_atlas* font_atlas_context)
@@ -116,55 +143,115 @@ void software_text_renderer::reset(software_text_renderer* software_text_rendere
 	render_texture::clear_color(software_text_renderer_context->backing_texture, sizeof(rgba_i8));
 }
 
-void software_text_renderer::render_text(software_text_renderer* str, std::string test, text_mode mode)
+void software_text_renderer::render_text(software_text_renderer* str, std::string test, text_mode mode, int pixel_size)
 {
 	font_atlas* working_atlas = str->font_atlas_context;
 
-	float scale = 0.2f;
+	std::vector<letter> letters;
+	std::vector<float> line_lengths;
+
+	float scale = (float)pixel_size / str->font_atlas_context->max_y_advance ;
+
+	float line_length = 0;
+
+	for (int i = 0; i < test.size(); ++i)
+	{
+		char working_character = test[i];
+
+		letter working_letter;
+
+		font_entry* entry;
+
+		float advance = 0;
+
+		if (str->font_atlas_context->entries.find(working_character) != str->font_atlas_context->entries.end())
+		{
+			entry = &str->font_atlas_context->entries[working_character];
+
+			advance = entry->x_advance * scale;
+		}
+		else
+		{
+			entry = nullptr;
+		}
+
+		working_letter.entry = entry;
+		working_letter.scale = scale;
+
+		if ((str->x + advance) >= str->width && working_character != '\n')
+		{
+			line_lengths.push_back(str->x);
+
+			str->x = 0;
+			str->y += str->font_atlas_context->max_y_advance * scale;
+		}
+
+		working_letter.id = working_character;
+		working_letter.result_offset = glm::vec2(str->x, str->y);
+		working_letter.scale = scale;
+
+		if (working_character == ' ')
+		{
+			str->x += str->font_atlas_context->average_x_advance * scale;
+		}
+		else if (working_character == '\n')
+		{
+			line_lengths.push_back(str->x);
+
+			str->x = 0;
+			str->y += str->font_atlas_context->max_y_advance * scale;
+		}
+		else
+		{
+			str->x += advance;
+		}
+
+		letters.push_back(working_letter);
+	}
+
+	line_lengths.push_back(str->x);
 
 	switch (mode)
 	{
-	case left_right:
+	case center:
 	{
-		for (int i = 0; i < test.size(); ++i)
+		int line = 0;
+
+		for (int i = 0; i < letters.size(); ++i)
 		{
-			char working_char = test[i];
+			letter* working_letter = &letters[i];
 
-			if (working_char == ' ')
+			working_letter->result_offset.x += (str->width / 2) - line_lengths[line] / 2;
+
+			if (working_letter->id == '\n')
 			{
-				str->x += working_atlas->average_x_advance * scale;
+				line++;
 			}
-			else if (working_char == '\n')
-			{
-				str->y += working_atlas->max_y_advance * scale;
-				str->x = 0;
-			}
-
-			if (working_atlas->entries.find(working_char) == working_atlas->entries.end())
-			{
-				continue;
-			}
-
-			font_entry* entry = &working_atlas->entries[test[i]];
-
-			int x_advance = entry->x_advance;
-
-			glm::vec2 letter_offset = glm::ivec2(str->x, str->y) + (glm::ivec2)(glm::vec2(entry->x_offset, entry->y_offset) * scale);
-
-			write_texture(
-				str->backing_texture,
-				working_atlas->font_atlas_texture,
-				letter_offset,
-				glm::ivec2(entry->x, entry->y),
-				glm::ivec2(entry->width, entry->height),
-				scale,
-				&x_advance
-			);
-
-			str->x += x_advance;
 		}
 	}; break;
 
-	default: throw 0;
+	case right_left:
+	{
+		int line = 0;
+
+		for (int i = 0; i < letters.size(); ++i)
+		{
+			letter* working_letter = &letters[i];
+
+			working_letter->result_offset.x += str->width - line_lengths[line];
+
+			if (working_letter->id == '\n')
+			{
+				line++;
+			}
+		}
+	}; break;
+	}
+
+	int blur = 1;
+
+	for (int i = 0; i < letters.size(); ++i)
+	{
+		write_character_to_buffer(str->backing_texture, &letters[i], blur, scale);
 	}
 }

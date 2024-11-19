@@ -32,7 +32,7 @@ struct software_text_renderer
 	static void		destroy(software_text_renderer* to_destroy);
 
 	static void		reset(software_text_renderer* software_text_renderer_context);
-	static void		render_text(software_text_renderer* software_text_renderer_context, std::string test, text_mode mode);
+	static void		render_text(software_text_renderer* software_text_renderer_context, std::string test, text_mode mode, int pixel_size);
 };
 
 #endif

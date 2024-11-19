@@ -5,6 +5,7 @@
 
 #include "chunk_store.h"
 #include "thread_manager.h"
+#include "perlin.h"
 
 struct world;
 
@@ -13,6 +14,10 @@ struct chunk_manager
 	world*			world_context;
 	chunk_store		chunks;
 	int				render_distance;
+
+	perlin			normal_noise;
+	perlin			mountain_noise;
+	perlin			mini_noise;
 
 	uint64_t		time;
 

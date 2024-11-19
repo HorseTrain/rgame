@@ -8,21 +8,24 @@
 
 struct io;
 struct render_texture;
+struct font_atlas;
 
 struct font_entry
 {
-	int id;
+	int			id;
 
-	int x;
-	int y;
+	int			x;
+	int			y;
 	
-	int width;
-	int height;
+	int			width;
+	int			height;
 
-	int x_offset;
-	int y_offset;
+	int			x_offset;
+	int			y_offset;
 
-	int x_advance;
+	int			x_advance;
+
+	font_atlas* font_atlas_context;
 };
 
 struct font_atlas
