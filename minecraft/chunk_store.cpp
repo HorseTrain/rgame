@@ -89,8 +89,6 @@ void chunk_store::destroy_ghost_chunks(chunk_store* chunk_store_context)
 
 	}
 
-	//*ghosted_chunks = std::unordered_set<chunk*>();
-
 	lock->unlock();
 }
 

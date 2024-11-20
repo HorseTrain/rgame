@@ -92,9 +92,11 @@ static void player_update_spectator(player* player_context)
 
 	bool mouse_click = input_manager::get_key_pressed(input_manager_context, GLFW_MOUSE_BUTTON_1);
 
+	player_context->forward = glm::normalize(transform::get_forward(glm::mat4_cast(player_context->transform_context.rotation)));;
+
 	if (mouse_click)
 	{
-		forward = glm::normalize(transform::get_forward( glm::mat4_cast(player_context->transform_context.rotation) ));
+		forward = player_context->forward;
 
 		int block_count = 1000;
 

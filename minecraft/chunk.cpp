@@ -248,9 +248,12 @@ void chunk::regenerate_mesh(chunk* chunk_context, bool recurse_neighbors)
 
 	chunk_context->mesh_ready = false;
 
-	chunk::generate_mesh(chunk_context);
+	if (ready_for_mesh_generation(chunk_context))
+	{
+		chunk::generate_mesh(chunk_context);
 
-	chunk_context->mesh_ready = true;
+		chunk_context->mesh_ready = true;
+	}
 
 	if (!recurse_neighbors)
 		return;
@@ -270,7 +273,7 @@ void chunk::generate_mesh(chunk* chunk_context)
 	{
 		assert(false); 
 		
-		throw 0;
+ 		throw 0;
 	}
 
 	if (chunk_context->non_transparent == 0)
@@ -358,7 +361,15 @@ bool chunk::ready_for_neighbor_generation(chunk* chunk_context)
 	if (!chunk_context->data_ready)
 		return false;
 
-	return true;
+	for (int i = 0; i < 6; ++i)
+	{
+		if (chunk_context->neighbors[i] == nullptr)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 bool chunk::ready_for_mesh_generation(chunk* chunk_context, std::unordered_set<chunk*>* chunks_just_destroyed)
@@ -489,7 +500,7 @@ block* chunk::get_block_reference(chunk* chunk_context, glm::ivec3 position)
 	return chunk::get_block_reference(chunk_context, position.x, position.y, position.z);
 }
 
-bool chunk::in_render_distance(chunk* chunk_context)
+bool chunk::in_render_distance(chunk* chunk_context, float mult)
 {
 	player* working_player = &chunk_context->chunk_manager_context->world_context->main_player;
 
@@ -497,6 +508,8 @@ bool chunk::in_render_distance(chunk* chunk_context)
 	glm::vec3 my_position = glm::vec3(chunk_context->position);
 
 	float render_distance = chunk_context->chunk_manager_context->render_distance * CUBE_CHUNK_SIZE;
+
+	render_distance *= 0.9f;
 
 	return glm::distance(player_position, my_position) < render_distance;
 }

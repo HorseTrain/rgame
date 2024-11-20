@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <tuple>
+#include "rgame/r_math.h"
 
 #ifndef MAZE_DATA_H
 #define MAZE_DATA_H
@@ -49,7 +50,7 @@ struct std::hash<KEY_TYPE>
 
 		for (int i = 0; i < sizeof(KEY_TYPE) / 4; ++i)
 		{
-			working_result ^= std::hash<int>()(buffer[i]);
+			working_result ^= (uint64_t)hash_uint32(buffer[i]) | (uint64_t)hash_uint32(buffer[i] + 1) << 32;
 		}
 
 		return working_result;

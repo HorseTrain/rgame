@@ -17,7 +17,7 @@ int perlin::get_i_axis(perlin* perlin_context, int seed)
 
 	int range = max - min;
 
-	return min + (hash(seed) % range);
+	return min + (hash_uint32(seed) % range);
 }
 
 float perlin::get_f_axis(perlin* perlin_context, float source)
@@ -37,5 +37,10 @@ float perlin::get_f_axis(perlin* perlin_context, float source)
 
 float perlin::get_x_y_perlin(perlin* perlin_context, float x, float y)
 {
-	return get_f_axis(perlin_context, x) + get_f_axis(perlin_context, 10000 + y);
+	return get_f_axis(perlin_context, x) + get_f_axis(perlin_context, y);
+}
+
+float perlin::get_x_y_z_perlin(perlin* perlin_context, float x, float y, float z)
+{
+	return get_f_axis(perlin_context, x) + get_f_axis(perlin_context, y) + get_f_axis(perlin_context,z);
 }

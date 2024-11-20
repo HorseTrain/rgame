@@ -83,7 +83,7 @@ static void render_chunks(chunk_manager* chunk_manager_context, std::vector<chun
 			chunk_mesh::upload(working_chunk_mesh);
 		}
 
-		glUniform1f(render_shader::get_uniform_location(chunk_shader, "is_highlighted"), working_chunk->highlight);
+		glUniform1f(render_shader::get_uniform_location(chunk_shader, "highlight"), working_chunk->highlight);
 		glUniform3f(render_shader::get_uniform_location(chunk_shader, "chunk_offset"), working_chunk->position.x, working_chunk->position.y, working_chunk->position.z);
 
 		chunk_mesh::draw(working_chunk_mesh);
@@ -159,7 +159,7 @@ static void create_chunk_mesh_data(uint64_t* arguments, int argument_count)
 
 		uint64_t min_time = chunk::get_minimum_destruction_time(*i, times);
 
-		if (min_time > 1)
+		if (min_time > 2)
 		{
 			to_destroy.push_back(*i);
 		}
@@ -173,12 +173,32 @@ static void create_chunk_mesh_data(uint64_t* arguments, int argument_count)
 
 		auto elapsed_miliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
 
-		if (elapsed_miliseconds > 5)
+		if (elapsed_miliseconds > 1)
 			return;
 
+		chunk_store_context->ghost_chunks_lock.lock();
 		ghost_que->erase(to_destroy[i]);
+		chunk_store_context->ghost_chunks_lock.unlock();
+
 		chunk::destroy(to_destroy[i]);
 	}
+}
+
+static bool chunk_in_player_thrustum(chunk* chunk_context, player* player_context)
+{
+	glm::vec3 player_position = player_context->transform_context.position;
+	glm::vec3 chunk_position = chunk_context->position;
+
+	glm::vec3 direction = glm::normalize(chunk_position - player_position);
+
+	float angle = abs(glm::dot(direction, player_context->forward));
+
+	if (glm::length(player_position - (glm::vec3)chunk_context->position) < CUBE_CHUNK_SIZE * 5)
+	{
+		return true;
+	}
+
+	return angle > 0.5f;
 }
 
 static void update_current_chunks(chunk_manager* chunk_manager_context)
@@ -193,6 +213,9 @@ static void update_current_chunks(chunk_manager* chunk_manager_context)
 	{
 		chunk* working_chunk = i->second;
 
+		if (working_chunk == nullptr)
+			continue;
+
 		if (working_chunk->marked_for_destruction)
 		{
 			continue;
@@ -205,11 +228,16 @@ static void update_current_chunks(chunk_manager* chunk_manager_context)
 			continue;
 		}
 
+		if (!chunk_in_player_thrustum(working_chunk, &chunk_manager_context->world_context->main_player))
+		{
+			continue;
+		}
+
 		if (!working_chunk->data_ready || !working_chunk->mesh_ready)
 		{
 			chunk_store::append_chunk_to_creation_que(chunk_store_context, working_chunk);
 		}
-		else
+		else if (working_chunk->non_transparent != 0)
 		{
 			to_render.push_back(working_chunk);
 		}
@@ -243,7 +271,7 @@ void chunk_manager::create(chunk_manager* chunk_manager_context, world* world_co
 
 	chunk_manager_context->time = 0;
 
-	chunk_manager_context->render_distance = 20;
+	chunk_manager_context->render_distance = RENDER_DISTANCE;
 }
 
 void chunk_manager::destroy(chunk_manager* chunk_manager_context)

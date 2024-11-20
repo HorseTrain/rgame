@@ -76,7 +76,7 @@ static void lerp(float* result,float* min, float* max, float percent, int count)
 	}
 }
 
-static uint32_t hash(uint32_t a)
+static uint32_t hash_uint32(uint32_t a)
 {
 	a = (a + 0x7ed55d16) + (a << 12);
 	a = (a ^ 0xc761c23c) ^ (a >> 19);

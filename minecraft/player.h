@@ -20,6 +20,8 @@ struct player
 	transform	transform_context;
 	player_mode mode;
 
+	glm::vec3	forward;
+
 	glm::vec3	current_velocity;
 
 	static void create(player* player_context, world* game_context);
