@@ -257,9 +257,9 @@ void chunk_manager::create(chunk_manager* chunk_manager_context, world* world_co
 {
 	chunk_manager_context->world_context = world_context;
 
-	perlin::create(&chunk_manager_context->normal_noise, 0, -100, 100);
-	perlin::create(&chunk_manager_context->mountain_noise, 0, 0, 100);
-	perlin::create(&chunk_manager_context->mini_noise, 0, -100,100);
+	perlin::create(&chunk_manager_context->normal_noise, 0);
+	perlin::create(&chunk_manager_context->mountain_noise, 0);
+	perlin::create(&chunk_manager_context->mini_noise, 0);
 
 	chunk_store::create(&chunk_manager_context->chunks,chunk_manager_context);
 

@@ -85,7 +85,7 @@ static void player_update_spectator(player* player_context)
 
 	player_context->current_velocity += (intended_movement_direction - player_context->current_velocity) / (10.0f / delta_time);
 
-	player_context->transform_context.position += player_context->current_velocity;
+	player_context->transform_context.position += player_context->current_velocity * 5.0f;
 
 	camera->transform_context.position = player_context->transform_context.position;
 	camera->transform_context.rotation = player_context->transform_context.rotation;

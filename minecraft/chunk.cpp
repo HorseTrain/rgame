@@ -185,6 +185,27 @@ void chunk::destroy(chunk* chunk_mesh_context, bool deallocate)
 	}
 }
 
+static float per(float x, float y)
+{
+	return perlin::get_x_y_perlin(nullptr, x, y);
+}
+
+static float get_height(perlin* perlin_context,float x, float y)
+{
+	float height = 0;
+
+	for (int i = 1; i < 4; ++i)
+	{
+		float scalaer = 100 + pow(10, i);
+
+		float working_height = (per(x / scalaer, y / scalaer) * scalaer);
+
+		height += working_height;
+	}
+
+	return height;
+}
+
 void chunk::generate_data(chunk* chunk_context)
 {
 	chunk_context->generating_data = true;
@@ -193,6 +214,8 @@ void chunk::generate_data(chunk* chunk_context)
 
 	chunk_context->block_locations.reserve(CUBE_CHUNK_SIZE * CUBE_CHUNK_SIZE * CUBE_CHUNK_SIZE);
 
+	float inward = 100;
+
 	for (int x = 0; x < CUBE_CHUNK_SIZE; ++x)
 	{
 		for (int z = 0; z < CUBE_CHUNK_SIZE; ++z)
@@ -200,11 +223,15 @@ void chunk::generate_data(chunk* chunk_context)
 			float hx = chunk_context->position.x + x;
 			float hz = chunk_context->position.z + z;
 
-			float normal_height = perlin::get_x_y_perlin(&chunk_context->chunk_manager_context->normal_noise, hx / 200.0f,hz / 200.0f) * .5f;
-			float mountain_height = perlin::get_x_y_perlin(&chunk_context->chunk_manager_context->mountain_noise, hx / 10000.0f, hz / 10000.0f);
-			float min_height = perlin::get_x_y_perlin(&chunk_context->chunk_manager_context->mini_noise, hx / 20.0f, hz / 20.0f) * 0.1f;
+			float height = get_height(&chunk_context->chunk_manager_context->mountain_noise,hx, hz);
 
-			float height = normal_height + mountain_height + min_height;
+			glm::vec2 p = { hx, hz };
+			float length = glm::length(p);
+
+			if (length < inward)
+			{
+				height = slerp(0, height, length / inward);
+			}
 
 			for (int y = 0; y < CUBE_CHUNK_SIZE; ++y)
 			{
