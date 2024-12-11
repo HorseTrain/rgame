@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="big_number.h" />
     <ClCompile Include="debug_mesh.cpp" />
     <ClCompile Include="font_atlas.cpp" />
     <ClCompile Include="input_manager.cpp" />

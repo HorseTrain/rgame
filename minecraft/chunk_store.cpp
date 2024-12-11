@@ -164,14 +164,12 @@ chunk* chunk_store::request_chunk(chunk_store* chunk_store_context, glm::ivec3 p
 	std::mutex* lock = &chunk_store_context->chunk_access_lock;
 	std::unordered_map<KEY_TYPE, chunk*>* chunks = &chunk_store_context->chunks;
 
-	lock->lock();
-
 	if (chunks->find(position) == chunks->end())
 	{
-		lock->unlock();
-
 		return nullptr;
 	}
+
+	lock->lock();
 
 	chunk* result = (*chunks)[position];
 

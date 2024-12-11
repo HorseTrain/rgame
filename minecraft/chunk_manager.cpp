@@ -249,8 +249,9 @@ static void update_current_chunks(chunk_manager* chunk_manager_context)
 	}
 
 	render_chunks(chunk_manager_context, &to_render);
-	generate_chunks_around_que(chunk_manager_context, &to_generate_neighbors);
 	generate_chunks_around_player(chunk_manager_context);
+
+	generate_chunks_around_que(chunk_manager_context, &to_generate_neighbors);
 }
 
 void chunk_manager::create(chunk_manager* chunk_manager_context, world* world_context)

@@ -10,13 +10,6 @@
 
 #include "rgame/glm/glm.hpp"
 
-#define NEIGHBOR_PX 0
-#define NEIGHBOR_NX 1
-#define NEIGHBOR_PY 2
-#define NEIGHBOR_NY 3
-#define NEIGHBOR_PZ 4
-#define NEIGHBOR_NZ 5
-
 static void create_block_data(chunk* chunk_context, block* block_reference, int x, int y, int z, float height)
 {
 	ivec3b local_position = ivec3b(x, y, z);
@@ -190,18 +183,14 @@ static float per(float x, float y)
 	return perlin::get_x_y_perlin(nullptr, x, y);
 }
 
+static float get_per_scaled(float x, float y, float amplitude, float frequency)
+{
+	return per(x * frequency, y * frequency) * amplitude;
+}
+
 static float get_height(perlin* perlin_context,float x, float y)
 {
-	float height = 0;
-
-	for (int i = 1; i < 4; ++i)
-	{
-		float scalaer = 100 + pow(10, i);
-
-		float working_height = (per(x / scalaer, y / scalaer) * scalaer);
-
-		height += working_height;
-	}
+	float height = get_per_scaled(x, y, 100, 0.01);
 
 	return height;
 }
@@ -223,7 +212,7 @@ void chunk::generate_data(chunk* chunk_context)
 			float hx = chunk_context->position.x + x;
 			float hz = chunk_context->position.z + z;
 
-			float height = get_height(&chunk_context->chunk_manager_context->mountain_noise,hx, hz);
+			float height = get_height(&chunk_context->chunk_manager_context->mountain_noise, hx, hz);
 
 			glm::vec2 p = { hx, hz };
 			float length = glm::length(p);

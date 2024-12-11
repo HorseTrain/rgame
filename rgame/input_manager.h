@@ -21,6 +21,8 @@ struct input_manager
 
 	int							mouse_x;
 	int							mouse_y;
+	int							mouse_velocity_x;
+	int							mouse_velocity_y;
 
 	static void create(input_manager* result, render_window* window);
 	static void destroy(input_manager* constext);

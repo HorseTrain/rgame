@@ -5,6 +5,7 @@
 
 #include "rgame/transform.h"
 #include "rgame/glm/vec3.hpp"
+#include "rgame/glm/vec2.hpp"
 
 struct world;
 
@@ -21,6 +22,7 @@ struct player
 	player_mode mode;
 
 	glm::vec3	forward;
+	glm::ivec2	mouse;
 
 	glm::vec3	current_velocity;
 

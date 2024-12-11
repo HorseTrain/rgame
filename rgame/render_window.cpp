@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <iostream>
+#include <thread>
 
 static bool glfw_context_open = false;
 
@@ -64,9 +65,17 @@ void render_window::run(render_window* window, void* arguments)
 
 	bool started = false;
 
+	uint64_t target_frame_time = 16000000;
+	uint64_t elapsed_nanoseconds = target_frame_time;
+
 	while (!should_window_close(window))
 	{
 		auto start_time = std::chrono::high_resolution_clock::now();
+
+		if (elapsed_nanoseconds < target_frame_time)
+		{
+			//std::this_thread::sleep_for(std::chrono::nanoseconds(target_frame_time - elapsed_nanoseconds));
+		}
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(window->default_color.x, window->default_color.y, window->default_color.z, window->default_color.w);
@@ -94,7 +103,7 @@ void render_window::run(render_window* window, void* arguments)
 
 		auto end_time = std::chrono::high_resolution_clock::now();
 
-		auto elapsed_nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
+		elapsed_nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
 
 		window->current_frame_rate = (1000000000.0 / (double)elapsed_nanoseconds);
 		double delta_time = (double)window->target_framerate / window->current_frame_rate;

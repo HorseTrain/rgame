@@ -3,7 +3,7 @@
 #ifndef CHUNK_H
 #define CHUNK_H
 
-#define CUBE_CHUNK_SIZE 32
+#define CUBE_CHUNK_SIZE 16
 #define RENDER_DISTANCE 20
 
 #include "rgame/glm/vec3.hpp"
@@ -19,10 +19,17 @@ struct chunk_manager;
 #define HOLE_SIZE 3
 #define TIME_COUNT 3
 
+#define NEIGHBOR_PX 0
+#define NEIGHBOR_NX 1
+#define NEIGHBOR_PY 2
+#define NEIGHBOR_NY 3
+#define NEIGHBOR_PZ 4
+#define NEIGHBOR_NZ 5
+
 static bool in_range(int source)
 {
 	return source > -HOLE_SIZE && source < HOLE_SIZE;
-}
+};
 
 struct chunk
 {

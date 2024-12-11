@@ -7,6 +7,7 @@
 #include <unordered_set>
 #include <tuple>
 #include "rgame/glm/vec3.hpp"
+#include "rgame/r_math.h"
 #include <vector>
 #include <mutex>
 
@@ -28,12 +29,13 @@ struct std::hash<KEY_TYPE>
 
 		for (int i = 0; i < sizeof(KEY_TYPE) / 4; ++i)
 		{
-			working_result ^= std::hash<int>()(buffer[i]);
+			working_result ^= ((uint64_t)hash_uint32(buffer[i]) << 32) | (uint64_t)hash_uint32(buffer[i] + 1);
 		}
 
 		return working_result;
 	}
 };
+
 
 struct chunk_store
 {

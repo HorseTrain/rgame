@@ -1,6 +1,8 @@
 #include "input_manager.h"
 #include "render_window.h"
 
+#include "rgame/glm/vec2.hpp"
+
 static bool is_mouse(int key)
 {
 	return key >= GLFW_MOUSE_BUTTON_1 && key <= GLFW_MOUSE_BUTTON_MIDDLE;
@@ -61,8 +63,15 @@ void input_manager::update(input_manager* input_manager_context)
 	double mouse[2];
 	glfwGetCursorPos(input_manager_context->window->raw_window, &mouse[0], &mouse[1]);
 
+	glm::dvec2 current_mouse = { mouse[0] , mouse[1] };
+	glm::dvec2 last_mouse = { input_manager_context->mouse_x , input_manager_context->mouse_y };
+	glm::dvec2 mouse_velocity = current_mouse - last_mouse;
+
 	input_manager_context->mouse_x = mouse[0];
 	input_manager_context->mouse_y = mouse[1];
+
+	input_manager_context->mouse_velocity_x = mouse_velocity.x;
+	input_manager_context->mouse_velocity_y = mouse_velocity.y;
 }
 
 bool input_manager::get_key_pressed(input_manager* input_manager_context, int key)
