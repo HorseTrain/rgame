@@ -1,4 +1,4 @@
 # rgame
- My game engine for CS 392
+ My game little game engine.
 
  Contains a modified version of Switch-Toolbox because I love testing with nintendo assets. 
